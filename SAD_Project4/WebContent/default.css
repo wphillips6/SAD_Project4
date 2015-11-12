@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+div.container {
+    border-style: solid;
+    border-width: 5px;
+}
+
+div.container-small {
+    border-style: solid;
+    border-width: 5px;
+    width: 200px;
+    height: 200px;
+    float: left;
+}
+
+div.c-sm-inline {
+    border-style: solid;
+    border-width: 5px;
+    width: 200px;
+    height: 200px;
+    display: inline;
+}
+
+div.content {
+    border: 3px solid blue;
+    
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+nav {
+    float: left;
+    width: 200px;
+    border: 3px solid green;
+}
+
+section {
+    margin-left: 206px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: 3px solid red;
+}
