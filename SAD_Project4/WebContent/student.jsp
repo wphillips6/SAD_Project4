@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%
 if( session.getAttribute("username") == null ) {
@@ -14,6 +14,6 @@ if( session.getAttribute("username") == null ) {
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Welcome student</h1>
+	<h1>Welcome student</h1>
 </body>
 </html>

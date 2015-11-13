@@ -1,4 +1,4 @@
-package proj4;
+package proj4.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
