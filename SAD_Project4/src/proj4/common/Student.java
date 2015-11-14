@@ -1,41 +1,28 @@
 package proj4.common;
 
 import java.util.List;
-import java.util.Vector;
 
 public class Student {
+	
+	private String uID;
+	private List<Course> desiredCourses;
+	
+    public Student() {
+    }
+    
+    public String getUID() {
+    	return uID;
+    }
+    
+    public void setUID(String u) {
+    	this.uID = u;
+    }
+    
+    public List<Course> getDesiredCourses() {
+        return desiredCourses;
+    }
 
-	public List<Course> desiredCourses;
-
-	public String id;
-
-	/**
-	 * 
-	 * @element-type Course
-	 */
-	public Vector myCourse;
-
-	public Student() {
-	}
-
-	public void getDesiredCourses() {
-	}
-
-	public void setDesiredCourses(List<Course> dc) {
-	}
-
-	public void getStudentID() {
-	}
-
-	public void setStudentID(String i) {
-	}
-
-	public List<Course> getCourseHistory() {
-
-		return null;
-	}
-
-	public void setCourseHistory(List<Course> c) {
-	}
-
+    public void setDesiredCourses(List<Course> desiredCourses) {
+        this.desiredCourses = desiredCourses;
+    }
 }

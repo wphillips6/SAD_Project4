@@ -1,20 +1,28 @@
 package proj4.common;
 
 public class Semester {
+	
+    public enum SemesterTerm {
+        FALL,
+        SPRING,
+        SUMMER,
+        EVERY
+    }
+    
+    private SemesterTerm term;
 
-	public String term;
-	public Course myCourse;
+    public Semester() {
+    }
+    
+    public Semester(SemesterTerm s) {
+    	this.term = s;
+    }
 
-	public Semester() {
-	}
+    public SemesterTerm getTerm() {
+        return term;
+    }
 
-	public Semester(String term) {
-	}
-
-	public void getTerm() {
-	}
-
-	public void setTerm( String s) {
-	}
-
+    public void setTerm(SemesterTerm term) {
+        this.term = term;
+    }
 }

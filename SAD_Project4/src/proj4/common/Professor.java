@@ -1,43 +1,28 @@
 package proj4.common;
 
 import java.util.List;
-import java.util.Vector;
 
 public class Professor {
+	
+	private String name;
+	private List<Course> competencies;
+	
+    public Professor() {
+    }
+    
+    public String getName() {
+    	return name;
+    }
+    
+    public void setName(String n) {
+    	this.name = n;
+    }
+    
+    public List<Course> getCompetencies() {
+        return competencies;
+    }
 
-	public String name;
-
-	public List<Course> courses;
-
-	public List<String> competencies;
-
-	/**
-	 * 
-	 * @element-type Course
-	 */
-	public Vector<Course> myCourse;
-
-	public Professor() {
-	}
-
-	public void getName() {
-	}
-
-	public void setName( String n) {
-	}
-
-	public List<Course> getCourses() {
-		return null;
-	}
-
-	public void setCourses(List<Course> c) {
-	}
-
-	public List<Course> getCompetencies() {
-		return null;
-	}
-
-	public void setCompetencies( List<Course> c) {
-	}
-
+    public void setCompetencies(List<Course> comp) {
+        this.competencies = comp;
+    }
 }
