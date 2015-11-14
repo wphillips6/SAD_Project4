@@ -14,7 +14,7 @@ public class StudentEntry {
   public StudentEntry() {
   }
 
-  public StudentEntry( Connection dbconnection, ServerApplication sa) {
+  public StudentEntry( Connection dbconnection) {
   }
 
   public void getUsername(String studentID) {

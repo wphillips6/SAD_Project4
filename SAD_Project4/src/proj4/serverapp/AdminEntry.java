@@ -1,7 +1,7 @@
 package proj4.serverapp;
 
+import java.sql.Connection;
 import java.util.List;
-
 import proj4.common.Course;
 
 
@@ -20,7 +20,7 @@ public class AdminEntry {
 	public AdminEntry() {
 	}
 
-	public AdminEntry( String dbconnection, ServerApplication sa) {
+	public AdminEntry( Connection dbconnection) {
 	}
 
 	public void getEnrollLimit() {
@@ -40,6 +40,7 @@ public class AdminEntry {
 	 * 
 	 */
 	public void addCourse( String desc) {
+		System.out.println("AE: adding course " + desc);
 	}
 
 	public String getSemester() {
@@ -53,6 +54,7 @@ public class AdminEntry {
 	}
 
 	public void addProfessor( String profName) {
+		System.out.println("AE: adding professor " + profName);
 	}
 
 	public List<Course> getProfessorCourses(String profId) {
@@ -74,9 +76,7 @@ public class AdminEntry {
 	}
 
 	public void addTA(String name) {
-	}
-
-	public void addProf(String name) {
+		System.out.println("AE: adding TA " + name);
 	}
 
 	public void updateTA(String taID, Boolean isAvailNextTerm) {
@@ -86,6 +86,7 @@ public class AdminEntry {
 	}
 
 	public void addStudent(String name) {
+		System.out.println("AE: adding student " + name);
 	}
 
 }
