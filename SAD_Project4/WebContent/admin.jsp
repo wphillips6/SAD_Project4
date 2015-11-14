@@ -2,11 +2,9 @@
 	pageEncoding="UTF-8"%>
 
 <%
-	if (session == null || session.getAttribute("username") == null) {
-		response.sendRedirect("index.jsp");
-	}
-	if (!session.getAttribute("isadmin").equals("1")) {
-		//request.getSession().invalidate();
+	if (session == null || session.getAttribute("username") == null ||
+			session.getAttribute("isadmin") == null ||
+			!session.getAttribute("isadmin").equals("1")) {
 		response.sendRedirect("index.jsp");
 	}
 %>
