@@ -1,51 +1,60 @@
 package proj4.common;
 
 public class Course {
+	private String id;
+	private String name;
+	private String description;
+	private String prerequisite;
+	private Semester semester;
 
-  public String id;
-  public String descriptions;
-  public String prerequisite;
-  public Semester semester;
-  public String corequisite;
-  public Semester mySemester;
-  public Student myStudent;
-  public TeacherAssistant myTeacherAssistant;
-  public Professor myProfessor;
+	public Course() {
+	}
 
-  public Course() {
-  }
+	public Course(String i, String n, String d, String p, Semester s) {
+		this.setID(i);
+		this.setName(n);
+		this.setDescription(d);
+		this.setPrerequisite(p);
+		this.setSemester(s);
+	}
 
-  public Course( String desc) {
-  }
+	public String getID() {
+		return id;
+	}
 
-  public void getID() {
-  }
+	public void setID(String i) {
+		this.id = i;
+	}
 
-  public void setID( String i) {
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void getDescription() {
-  }
+	public void setName(String n) {
+		this.name = n;
+	}
 
-  public void setDescription( String d) {
-  }
+	public String getDescription() {
+		return description;
+	}
 
-  public void getPrerequisite() {
-  }
+	public void setDescription(String d) {
+		this.description = d;
+	}
 
-  public void setPrerequisite( Course p) {
-  }
+	public String getPrerequisite() {
+		return prerequisite;
+	}
 
-  public void getSemester() {
-  }
+	public void setPrerequisite(String p) {
+		this.prerequisite = p;
+	}
 
-  public void setSemester( Semester s) {
-  }
+	public Semester getSemester() {
+		return semester;
+	}
 
-  public void getCorequisite() {
-  }
-
-  public void setCorequisite(Course c) {
-  }
-
+	public void setSemester(Semester s) {
+		this.semester = s;
+	}
 }
