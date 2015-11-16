@@ -6,13 +6,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
 
-<title>Add or Remove Courses to be Offered</title>
+<title>Modify Course Enrollment Limits</title>
 </head>
 <body>
 	<div class="content">
 		<div class="content">
 			<h1>
- 				Modify Course Offerings..
+ 				Modify Course Enrollment limits..
 			</h1>
 		</div>
 
@@ -28,20 +28,16 @@
 		</ul>
 		</nav>
 
-		<section> <span>Enter Course and Action</span><br>
+		<section> <span>Enter Student ID and Request Type</span><br>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="setCourse" /> 
-			Course ID:<input name="crsname" /> <br><br> 
-			
-            Action:<br>
-            <input type="radio" name="courseSetType" value="add" checked> Add Course
-			<input type="radio" name="courseSetType" value="remove"> Remove Course
+			<input type="hidden" name="function" value="dispRecsPrefs" /> 
+			Student ID:<input name="stuname" /> 
 			<br><br>
+			Display Type:<br>
+            <input type="radio" name="dispType" value="recs" checked> Recommendations
+			<input type="radio" name="dispType" value="prefs"> Preferences<br><br>
 			
-			Model Mode:<br>
-            <input type="radio" name="modelModeType" value="standard" checked> Standard
-			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
-			<input type="submit" value="Make Change" />
+			<input type="submit" value="Get Data" />
 		</form>
 		</section>
 

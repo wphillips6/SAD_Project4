@@ -50,7 +50,8 @@
 		<li><a href="setStaff.jsp">Set Staffing</a></li>
 		</section>
 		
-		<section> <span>Display Preferences and Recommendations for Student?</span>
+		<section> <span>Display Current Preferences or Recommendations for a Student?</span>
+		<li><a href="dispStudentStats.jsp">Student Stats</a></li>
 
 		</section>
 

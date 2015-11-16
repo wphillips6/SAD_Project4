@@ -38,12 +38,12 @@
 
 		<section> <span>Enter Course and Limit</span><br>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="setEnrollLims" /> Course
-			ID:<input name="crsname" /> 
+			<input type="hidden" name="function" value="setEnrollLims" /> 
+			Course ID:<input name="crsname" /> 
 			<br>
 		    Enroll Limit:<input name="crslim" />
 			<br><br>
-			            Model Mode:
+			Model Mode:<br>
             <input type="radio" name="modelModeType" value="standard" checked> Standard
 			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
 			<input type="submit" value="Make Change" />

@@ -75,7 +75,7 @@ public class AdminSv extends HttpServlet {
 	    	
 	    } else if( f.compareTo("setStaffAsts")== 0){
 	    	
-	    } else if(f.compareTo("getRecsPrefs") == 0){
+	    } else if(f.compareTo("dispRecsPrefs") == 0){
 	    	
 	    }
 	    else {
