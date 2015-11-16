@@ -13,16 +13,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
-<title>Insert title here</title>
+<title>Admin Landing Page</title>
 </head>
 <body>
 	<div class="content">
 		<div class="content">
 			<h1>
-				Why, hello
+				Welcome, 
 				<%
 				out.print(session.getAttribute("username"));
-			%>!
+			%>. Would you like to...
 			</h1>
 		</div>
 
@@ -38,40 +38,31 @@
 		</ul>
 		</nav>
 
-		<section> <span>Title 1</span>
+		<section> <span>Edit Class Sizes?</span>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="addCourse" /> Course
-			Name:<input name="crsname" /> <input type="submit" value="Submit" />
+			<input type="hidden" name="function" value="editEnrollLims" />
+			<input type="submit" value="Edit Enrollment Limits" />
 		</form>
 		</section>
 
-		<section> <span>Title 1</span>
+		<section> <span>Edit Current Semester Offerings?</span>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="addProfessor" />
-			Professor Name:<input name="profname" /> <input type="submit"
-				value="Submit" />
+			<input type="hidden" name="function" value="editCourses" />
+			<input type="submit" value="Edit Courses" />
 		</form>
 		</section>
-		<section> <span>Title 1</span>
+		<section> <span>Edit Staffing Assignments?</span>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="addStudent" /> Student
-			Name:<input name="studentname" /> <input type="submit" value="Submit" />
+			<input type="hidden" name="function" value="editStaff" /> 
+			<input type="submit" value="Assign Staff" />
 		</form>
 		</section>
-		<section> <span>Title 1</span>
+		<section> <span>Display Recommendations for Student?</span>
 		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="addTA" /> Teaching
-			Assistant Name:<input name="taname" /> <input type="submit"
-				value="Submit" />
+			<input type="hidden" name="function" value="dispRecs" /> 
+			<input type="submit" value="View Student Results" />
 		</form>
 		</section>
-
-		<section> <span>Title 2</span>
-		<p>This is paragraph 2</p>
-		</section>
-
-
-
 
 	</div>
 </body>
