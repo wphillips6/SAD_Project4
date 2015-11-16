@@ -39,29 +39,19 @@
 		</nav>
 
 		<section> <span>Edit Class Sizes?</span>
-		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="editEnrollLims" />
-			<input type="submit" value="Edit Enrollment Limits" />
-		</form>
+		<li><a href="setEnroll.jsp">Set Enrollment Limits</a></li>
 		</section>
 
 		<section> <span>Edit Current Semester Offerings?</span>
-		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="editCourses" />
-			<input type="submit" value="Edit Courses" />
-		</form>
+		<li><a href="setCourses.jsp">Set Courses for Semester</a></li>	
 		</section>
+		
 		<section> <span>Edit Staffing Assignments?</span>
-		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="editStaff" /> 
-			<input type="submit" value="Assign Staff" />
-		</form>
+		<li><a href="setStaff.jsp">Set Staffing</a></li>
 		</section>
-		<section> <span>Display Recommendations for Student?</span>
-		<form method="POST" action="Admin">
-			<input type="hidden" name="function" value="dispRecs" /> 
-			<input type="submit" value="View Student Results" />
-		</form>
+		
+		<section> <span>Display Preferences and Recommendations for Student?</span>
+
 		</section>
 
 	</div>

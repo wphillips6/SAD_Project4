@@ -69,17 +69,13 @@ public class AdminSv extends HttpServlet {
 	    // Determine which form was submitted and call appropriate methods
 	    out.println("Function:  " + request.getParameter("function"));
 	    String f = request.getParameter("function");
-	    if( f.compareTo("editEnrollLims") == 0 ){
-			response.sendRedirect("setEnroll.jsp");
-	    } else if( f.compareTo("editCourses") == 0 ){
-	    	response.sendRedirect("setCourses.jsp");
-	    } else if( f.compareTo("editStaff") == 0 ){
-
-	    } else if( f.compareTo("dispRecs") == 0 ){
-
-	    } else if( f.compareTo("setEnrollLims") == 0) {
+	    if( f.compareTo("setEnrollLims") == 0) {
 	    	
 	    } else if( f.compareTo("setCourse") == 0) {
+	    	
+	    } else if( f.compareTo("setStaffAsts")== 0){
+	    	
+	    } else if(f.compareTo("getRecsPrefs") == 0){
 	    	
 	    }
 	    else {

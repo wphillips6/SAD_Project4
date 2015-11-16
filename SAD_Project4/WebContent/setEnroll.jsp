@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <%
+	if (session == null || session.getAttribute("username") == null ||
+			session.getAttribute("isadmin") == null ||
+			!session.getAttribute("isadmin").equals("1")) {
+		response.sendRedirect("index.jsp");
+	}
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -28,12 +36,17 @@
 		</ul>
 		</nav>
 
-		<section> <span>Enter Course and Limit</span>
+		<section> <span>Enter Course and Limit</span><br>
 		<form method="POST" action="Admin">
 			<input type="hidden" name="function" value="setEnrollLims" /> Course
-			Name or Number:<input name="crsname" /> 
-			New Enrollment Limit:<input name="crslim" />
-			<input type="submit" value="Edit Enrollment Limits" />
+			ID:<input name="crsname" /> 
+			<br>
+		    Enroll Limit:<input name="crslim" />
+			<br><br>
+			            Model Mode:
+            <input type="radio" name="modelModeType" value="standard" checked> Standard
+			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
+			<input type="submit" value="Make Change" />
 		</form>
 		</section>
 

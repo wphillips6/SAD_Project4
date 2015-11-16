@@ -28,15 +28,19 @@
 		</ul>
 		</nav>
 
-		<section> <span>Enter Course and Limit</span>
+		<section> <span>Enter Course and Limit</span><br>
 		<form method="POST" action="Admin">
 			<input type="hidden" name="function" value="setCourse" /> Course
-			Name or Number:<input name="crsname" /> 
+			ID:<input name="crsname" /> <br><br> 
 			
+            Action:<br>
             <input type="radio" name="courseSetType" value="add" checked> Add Course
-			<br>
 			<input type="radio" name="courseSetType" value="remove"> Remove Course
-
+			<br><br>
+			
+			Model Mode:
+            <input type="radio" name="modelModeType" value="standard" checked> Standard
+			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
 			<input type="submit" value="Make Change" />
 		</form>
 		</section>
