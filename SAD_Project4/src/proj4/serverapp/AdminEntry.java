@@ -30,7 +30,7 @@ public class AdminEntry {
 	 * 
 	 * @param limit
 	 */
-	public void setEnrollLimit( int limit) {
+	public void setEnrollLimit( int limit, String course) {
 	}
 
 	public void getSemesterCourse() {

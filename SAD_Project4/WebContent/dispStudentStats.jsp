@@ -6,13 +6,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
 
-<title>Modify Course Enrollment Limits</title>
+<title>Student Statistics</title>
 </head>
 <body>
 	<div class="content">
 		<div class="content">
 			<h1>
- 				Modify Course Enrollment limits..
+ 				Display Recommendations for, or Preferences of, a Student
 			</h1>
 		</div>
 

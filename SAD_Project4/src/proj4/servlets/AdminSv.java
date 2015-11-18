@@ -70,13 +70,34 @@ public class AdminSv extends HttpServlet {
 	    out.println("Function:  " + request.getParameter("function"));
 	    String f = request.getParameter("function");
 	    if( f.compareTo("setEnrollLims") == 0) {
-	    	
+	    	String course = request.getParameter("crsname");
+	    	String limit = request.getParameter("crslim");
+	    	String shadow = request.getParameter("modelModeType");
+	    	response.sendRedirect("admin.jsp");
+
 	    } else if( f.compareTo("setCourse") == 0) {
 	    	
+	    	String course = request.getParameter("crsname");
+	    	String mode = request.getParameter("courseSetType");
+	    	String shadow = request.getParameter("modelModeType");
+	    	
+	    	response.sendRedirect("admin.jsp");
+
 	    } else if( f.compareTo("setStaffAsts")== 0){
 	    	
+	    	String courses = request.getParameter("crsname");
+	    	String staffid = request.getParameter("staffname");
+	    	String stafftype = request.getParameter("stafftype");
+	    	String staffUpT1 = request.getParameter("staffUpdateType1");
+	    	String staffUpT2 = request.getParameter("staffUpdateType2");
+	    	String shadow = request.getParameter("modelModeType");
+	    	response.sendRedirect("admin.jsp");
+
 	    } else if(f.compareTo("dispRecsPrefs") == 0){
-	    	
+	    	String student = request.getParameter("stuname");
+	    	String dispType = request.getParameter("dispType");
+	    	response.sendRedirect("admin.jsp");
+
 	    }
 	    else {
 	    	response.sendRedirect("logout.jsp");
