@@ -1,4 +1,4 @@
-package proj4.engine;
+package Engine;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.util.List;
 
 import proj4.common.Course;
 import proj4.common.CourseCatalog;
+import proj4.common.Semester;
 import proj4.common.Student;
 import proj4.common.Professor;
 import proj4.common.Semester.SemesterTerm;
@@ -16,17 +17,13 @@ import proj4.common.TeacherAssistant;
 
 public class ComputationalEngine {
 	
-	String fileName = "/home/ubuntu/Documents/Project 4/student_schedule.txt";
-	String studentFileName = "/home/ubuntu/Documents/Project 4/StudentPreferences_Input.csv";
-	String studentHistoryFileName = "/home/ubuntu/Documents/Project 4/StudentHistory_Inputs.csv";
+	String courseFileName = "/home/ubuntu/Documents/Project 4/Course.csv";
+	String studentFileName = "/home/ubuntu/Documents/Project 4/Student.csv";
 	String professorFileName = "/home/ubuntu/Documents/Project 4/Professor.csv";
 	String taFileName = "/home/ubuntu/Documents/Project 4/TA.csv";
 	
-	//private static final int MAX_COURSE_NUM_SIZE = 2;
-	
-	private CourseCatalog cCatalog = new CourseCatalog(18);
-    private List<Student> students = new ArrayList<Student>(600);
-    private List<Student> studentsHistory = new ArrayList<Student>(600);
+	private CourseCatalog cCatalog = new CourseCatalog();
+    private List<Student> students = new ArrayList<Student>();
     private List<Professor> professors = new ArrayList<Professor>();
     private List<TeacherAssistant> tas = new ArrayList<TeacherAssistant>();
     
@@ -37,18 +34,17 @@ public class ComputationalEngine {
     
     // Main processing method
 	public void CalculateSchedule() {
-		// TODO Read the test data from the provided folder
-		//boolean readFile = ReadTextFile();
+		
+		boolean readCourseFileName = ReadCourseCSVFile();
 		boolean readStudentFile = ReadStudentCSVFile();
-		boolean readStudentHistoryFile = ReadStudentHistoryCSVFile();
 		boolean readProfessorFile = ReadProfessorCSVFile();
 		boolean readTAFile = ReadTACSVFile();
 		
 		//if (readFile) {
 			//Optimizer op = new Optimizer(ConvertToStudentMatrix(),ConvertToCourseMatrix(),ConvertToPrereqMatrix());
 			//op.Calculate();
-		if (readStudentFile && readStudentHistoryFile && readProfessorFile && readTAFile) {
-			Optimizer op = new Optimizer(ConvertToStudentMatrix(),ConvertToStudentHistoryMatrix(),
+		if (readStudentFile && readCourseFileName && readProfessorFile && readTAFile) {
+			Optimizer op = new Optimizer(ConvertToStudentMatrix(), ConvertToStudentHistoryMatrix(),
 					                     ConvertToProfessorMatrix(),ConvertToTAMatrix(),
 					                     ConvertToCourseMatrix(),ConvertToPrereqMatrix());
 			op.Calculate();
@@ -58,45 +54,50 @@ public class ComputationalEngine {
 		}
 	}
 	
-	// Method to read the text file
-	public boolean ReadTextFile() {
+	public boolean ReadCourseCSVFile() {
 
 		String line = null;
 
 		try {
 			// Read text files
-			FileReader fileReader = new FileReader(taFileName);
+			FileReader fileReader = new FileReader(courseFileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+			
+			List<Course> courseList = new ArrayList<Course>();
+			
 			// Read the lines
 			while ((line = bufferedReader.readLine()) != null) {
-				if (!line.toLowerCase().contains("%") && line != null
-						&& !line.isEmpty()) { // Skip the lines with comment and empty lines
-					line = line.replaceAll("\\s", "");
-					String delims = "[.]+";
-					String[] courses = line.split(delims);
+				if (line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
+					String[] courses = line.split(",");
+
+					// Fill the list of course with the information
+					Course course = new Course();
+					course.setNum(courses[0]);
+					course.setID(courses[1]);
+					course.setDescription(courses[2]);
+					course.setLimit(courses[3]);
+					course.setPrerequisite(courses[4]);
+					course.setCorequisite(courses[5]);
+					Semester s = new Semester();
+					s.setTerm(courses[6]);
+					course.setSemester(s);
+					course.setSystemSpec(courses[7]);
+					course.setIntelSpec(courses[8]);
+					course.setRoboSpec(courses[9]);
+					course.setMachSpec(courses[10]);
 					
-					// Fill the list of desired courses with the information
-					List<Course> desiredCourses = new ArrayList<Course>(courses.length);
-					for (int j = 0; j < courses.length; j++)
-					{
-						Course c = cCatalog.getCourse(Integer.parseInt(courses[j])-1);
-						desiredCourses.add(c);
-					}
-					
-					// Set the desired course to the student and then add the student to the list 
-					Student stud = new Student();
-					stud.setDesiredCourses(desiredCourses);
-					students.add(stud);
+					//Add the course to the temp list
+					courseList.add(course);
 				}
 			}
 			// close the file
+			cCatalog.setCourses(courseList);
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + taFileName + "'");
+			System.out.println("Unable to open file '" + courseFileName + "'");
 			return false;
 		} catch (IOException ex) {
-			System.out.println("Error reading file '" + taFileName + "'");
+			System.out.println("Error reading file '" + courseFileName + "'");
 			return false;
 		}
 		return true;
@@ -110,24 +111,39 @@ public class ComputationalEngine {
 			// Read text files
 			FileReader fileReader = new FileReader(studentFileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+			
 			// Read the lines
 			while ((line = bufferedReader.readLine()) != null) {
 				if ( line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
-					String[] courses = line.split(",");
+					String[] info = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+					
+					Student stud = new Student();
+					stud.setUID(info[0]);
+					stud.setName(info[1]);
+					stud.setNumCourse(info[5]);
 					
 					// Fill the list of desired courses with the information
-					List<Course> desiredCourses = new ArrayList<Course>(courses.length-1);
-					for (int j = 1; j < courses.length; j++)
+					String tempDCourse = info[6].replace("\"", "");
+					String[] dCourses = tempDCourse.split(",");
+					List<Course> desiredCourses = new ArrayList<Course>(dCourses.length);
+					for (int j = 1; j < dCourses.length; j++)
 					{
-						Course c = cCatalog.getCourse(courses[j]);
+						Course c = cCatalog.getCourseByNum(dCourses[j]);
 						desiredCourses.add(c);
 					}
-					
-					// Set the desired course to the student and then add the student to the list 
-					Student stud = new Student();
-					stud.setUID(courses[0]);
 					stud.setDesiredCourses(desiredCourses);
+					
+					// Fill the list of completed courses with the information
+					String tempCCourse = info[7].replace("\"", "");
+					String[] cCourses = tempCCourse.split(",");
+					List<Course> completeCourses = new ArrayList<Course>(cCourses.length);
+					for (int j = 0; j < cCourses.length; j++)
+					{
+						Course c = cCatalog.getCourseByNum(cCourses[j]);
+						completeCourses.add(c);
+					}
+					stud.setCompletedCourses(completeCourses);
+					
 					students.add(stud);
 				}
 			}
@@ -138,47 +154,6 @@ public class ComputationalEngine {
 			return false;
 		} catch (IOException ex) {
 			System.out.println("Error reading file '" + studentFileName + "'");
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean ReadStudentHistoryCSVFile() {
-
-		String line = null;
-
-		try {
-			// Read text files
-			FileReader fileReader = new FileReader(studentHistoryFileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			// Read the lines
-			while ((line = bufferedReader.readLine()) != null) {
-				if (line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
-					String[] courses = line.split(",");
-
-					// Fill the list of desired courses with the information
-					List<Course> courseHistory = new ArrayList<Course>(courses.length - 1);
-					for (int j = 1; j < courses.length; j++) {
-						Course c = cCatalog.getCourse(courses[j]);
-						courseHistory.add(c);
-					}
-
-					// Set the desired course to the student and then add the
-					// student to the list
-					Student stud = new Student();
-					stud.setUID(courses[0]);
-					stud.setDesiredCourses(courseHistory);
-					studentsHistory.add(stud);
-				}
-			}
-			// close the file
-			bufferedReader.close();
-		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + studentHistoryFileName + "'");
-			return false;
-		} catch (IOException ex) {
-			System.out.println("Error reading file '" + studentHistoryFileName + "'");
 			return false;
 		}
 		return true;
@@ -196,20 +171,22 @@ public class ComputationalEngine {
 			// Read the lines
 			while ((line = bufferedReader.readLine()) != null) {
 				if (line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
-					String[] courses = line.split(",");
+					String[] info = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+					
+					Professor prof = new Professor();
+					prof.setStaffId(info[0]);
+					prof.setName(info[1]);
+					prof.setAvailable(info[2]);
 
 					// Fill the list of desired courses with the information
-					List<Course> comp = new ArrayList<Course>(courses.length - 1);
-					for (int j = 1; j < courses.length; j++) {
-						Course c = cCatalog.getCourse(courses[j]);
-						comp.add(c);
+					String tempComps = info[3].replace("\"", "");
+					String[] comps = tempComps.split(",");
+					List<Course> pComp = new ArrayList<Course>(comps.length);
+					for (int j = 0; j < comps.length; j++) {
+						Course c = cCatalog.getCourseByNum(comps[j]);
+						pComp.add(j, c);
 					}
-
-					// Set the desired course to the student and then add the
-					// student to the list
-					Professor prof = new Professor();
-					prof.setName(courses[0]);
-					prof.setCompetencies(comp);
+					prof.setCompetencies(pComp);
 					professors.add(prof);
 				}
 			}
@@ -237,20 +214,22 @@ public class ComputationalEngine {
 			// Read the lines
 			while ((line = bufferedReader.readLine()) != null) {
 				if (line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
-					String[] courses = line.split(",");
+					String[] info = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+					
+					TeacherAssistant ta = new TeacherAssistant();
+					ta.setStaffId(info[0]);
+					ta.setName(info[1]);
+					ta.setAvailable(info[2]);
 
 					// Fill the list of desired courses with the information
-					List<Course> comp = new ArrayList<Course>(courses.length - 1);
-					for (int j = 1; j < courses.length; j++) {
-						Course c = cCatalog.getCourse(courses[j]);
-						comp.add(c);
+					String tempComps = info[3].replace("\"", "");
+					String[] comps = tempComps.split(",");
+					List<Course> tComp = new ArrayList<Course>(comps.length);
+					for (int j = 0; j < comps.length; j++) {
+						Course c = cCatalog.getCourseByNum(comps[j]);
+						tComp.add(c);
 					}
-
-					// Set the desired course to the student and then add the
-					// student to the list
-					TeacherAssistant ta = new TeacherAssistant();
-					ta.setName(courses[0]);
-					ta.setTeachableCourses(comp);
+					ta.setCompetencies(tComp);
 					tas.add(ta);
 				}
 			}
@@ -268,7 +247,7 @@ public class ComputationalEngine {
 	
 	// Method to convert Student Preferences into the array
 	public Integer[][] ConvertToStudentMatrix() {
-		Integer[][] As = new Integer[600][18];
+		Integer[][] As = new Integer[students.size()][cCatalog.getCourseCatalogSize()];
 		for (int i = 0; i < students.size(); i++) {
 			for (int j = 0; j < As[i].length; j++) {
 				As[i][j] = 0;
@@ -279,7 +258,7 @@ public class ComputationalEngine {
 			List<Course> desiredCourses = stud.getDesiredCourses();
 			for (int j = 0; j < desiredCourses.size(); j++) {
 				Course c = desiredCourses.get(j);
-				As[i][Integer.parseInt(c.getID())-1] = 1;
+				As[i][Integer.parseInt(c.getNum())-1] = 1;
 			}
 		}
 		return As;
@@ -287,18 +266,18 @@ public class ComputationalEngine {
 	
 	// Method to convert Student History information into the array
 	public Integer[][] ConvertToStudentHistoryMatrix() {
-		Integer[][] Ash = new Integer[studentsHistory.size()][18];
-		for (int i = 0; i < studentsHistory.size(); i++) {
+		Integer[][] Ash = new Integer[students.size()][cCatalog.getCourseCatalogSize()];
+		for (int i = 0; i < students.size(); i++) {
 			for (int j = 0; j < Ash[i].length; j++) {
 				Ash[i][j] = 0;
 			}
 			
 			// Set the desired course to the student array
-			Student stud = studentsHistory.get(i);
-			List<Course> desiredCourses = stud.getDesiredCourses();
-			for (int j = 0; j < desiredCourses.size(); j++) {
-				Course c = desiredCourses.get(j);
-				Ash[i][Integer.parseInt(c.getID())-1] = 1;
+			Student stud = students.get(i);
+			List<Course> completeCourses = stud.getCompletedCourses();
+			for (int j = 0; j < completeCourses.size(); j++) {
+				Course c = completeCourses.get(j);
+				Ash[i][Integer.parseInt(c.getNum())-1] = 1;
 			}
 		}
 		return Ash;
@@ -306,7 +285,7 @@ public class ComputationalEngine {
 	
 	// Method to convert Professor information into the array
 	public Integer[][] ConvertToProfessorMatrix() {
-		Integer[][] p = new Integer[professors.size()][18];
+		Integer[][] p = new Integer[professors.size()][cCatalog.getCourseCatalogSize()];
 		for (int i = 0; i < professors.size(); i++) {
 			for (int j = 0; j < p[i].length; j++) {
 				p[i][j] = 0;
@@ -317,7 +296,8 @@ public class ComputationalEngine {
 			List<Course> comp = prof.getCompetencies();
 			for (int j = 0; j < comp.size(); j++) {
 				Course c = comp.get(j);
-				p[i][Integer.parseInt(c.getID())-1] = 1;
+				String test = c.getNum();
+				p[i][Integer.parseInt(c.getNum())-1] = 1;
 			}
 		}
 		return p;
@@ -325,7 +305,7 @@ public class ComputationalEngine {
 	
 	// Method to convert TA information into the array
 	public Integer[][] ConvertToTAMatrix() {
-		Integer[][] t = new Integer[tas.size()][18];
+		Integer[][] t = new Integer[tas.size()][cCatalog.getCourseCatalogSize()];
 		for (int i = 0; i < tas.size(); i++) {
 			for (int j = 0; j < t[i].length; j++) {
 				t[i][j] = 0;
@@ -333,10 +313,10 @@ public class ComputationalEngine {
 			
 			// Set the desired course to the professor array
 			TeacherAssistant ta = tas.get(i);
-			List<Course> comp = ta.getTeachableCourses();
+			List<Course> comp = ta.getCompetencies();
 			for (int j = 0; j < comp.size(); j++) {
 				Course c = comp.get(j);
-				t[i][Integer.parseInt(c.getID())-1] = 1;
+				t[i][Integer.parseInt(c.getNum())-1] = 1;
 			}
 		}
 		return t;
@@ -344,7 +324,7 @@ public class ComputationalEngine {
 	
 	// Method to convert course information into the array
 	public Integer[][] ConvertToCourseMatrix() {
-		Integer[][] Ac = new Integer[18][3];
+		Integer[][] Ac = new Integer[cCatalog.getCourseCatalogSize()][3];
 		List<Course> availableCourses = cCatalog.getCourses();
 		
 		// Set the course information to the course array
@@ -371,7 +351,7 @@ public class ComputationalEngine {
 	
 	// Method to convert prerequisite information into the array
 	public Integer[][] ConvertToPrereqMatrix() {
-		Integer[][] Ap = new Integer[18][18];
+		Integer[][] Ap = new Integer[cCatalog.getCourseCatalogSize()][cCatalog.getCourseCatalogSize()];
 		List<Course> availableCourses = cCatalog.getCourses();
 		
 		// Set the prerequisite course to the prerequisite array

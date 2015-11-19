@@ -13,16 +13,26 @@ public class Semester {
 
     public Semester() {
     }
-    
-    public Semester(SemesterTerm s) {
-    	this.term = s;
-    }
 
-    public SemesterTerm getTerm() {
-        return term;
-    }
+	public Semester(SemesterTerm s) {
+		this.term = s;
+	}
 
-    public void setTerm(SemesterTerm term) {
-        this.term = term;
-    }
+	public SemesterTerm getTerm() {
+		return term;
+	}
+
+	public void setTerm(SemesterTerm t) {
+		this.term = t;
+	}
+
+	public void setTerm(String s) {
+		if (s != null) {
+			for (SemesterTerm t : SemesterTerm.values()) {
+				if (s.equalsIgnoreCase(t.toString())) {
+					this.term = t;
+				}
+			}
+		}
+	}
 }
