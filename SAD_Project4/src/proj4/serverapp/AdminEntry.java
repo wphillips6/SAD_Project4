@@ -1,13 +1,19 @@
 package proj4.serverapp;
 import java.sql.Connection;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
-import proj4.common.Course;
 
+import org.apache.tomcat.jni.Time;
+
+import proj4.common.Course;
+import proj4.common.Semester;
+import proj4.common.CourseCatalog;
 
 public class AdminEntry {
 	public Integer enrollLimit;
 	public List<String> semesterCourse;
-	public String semester;
+	public Semester s;
 	public List<String> professor;
 	public List<String> professorCourses;
 	public List<String> taPool;
@@ -15,7 +21,22 @@ public class AdminEntry {
 	public ServerApplication myServerApplication;
 
 	public AdminEntry() {
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		int month = Calendar.getInstance().get(Calendar.MONTH);
 		
+		// This is a predictive system, so the current or active semester should be
+		// the /next/ semester with respect to the current date.
+		if((month == Calendar.AUGUST && day >= 17) || month == Calendar.SEPTEMBER || 
+			month == Calendar.OCTOBER || month == Calendar.NOVEMBER || 
+			month == Calendar.DECEMBER || (month == Calendar.JANUARY && day <= 11)){
+			s.setTerm(Semester.SemesterTerm.SPRING);
+		}
+		else if((month == Calendar.JANUARY && day > 11) || month == Calendar.FEBRUARY ||
+				 month == Calendar.MARCH || month == Calendar.APRIL || 
+				 (month == Calendar.MAY && day < 11)){
+			s.setTerm(Semester.SemesterTerm.SUMMER);
+		}
+		else s.setTerm(Semester.SemesterTerm.FALL);
 	}
 	
 	public AdminEntry( Connection dbconnection) {
