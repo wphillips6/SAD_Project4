@@ -8,7 +8,7 @@ public class Semester {
         SUMMER,
         EVERY
     }
-    
+    private String id;
     private SemesterTerm term;
 
     public Semester() {
@@ -22,7 +22,8 @@ public class Semester {
         return term;
     }
 
-    public void setTerm(SemesterTerm term) {
+    public void setTerm(String semesterID, SemesterTerm term) {
         this.term = term;
+        this.id = semesterID;
     }
 }

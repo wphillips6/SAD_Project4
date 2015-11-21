@@ -88,9 +88,11 @@ public class AdminSv extends HttpServlet {
 			String course = request.getParameter("crsname");
 			String mode = request.getParameter("courseSetType");
 			String shadow = request.getParameter("modelModeType");
+			String semester = request.getParameter("semester");
 			String error = null;
-			if(mode.equals("add")) error =  ae.addCourse(course, shadow.equals("shadow"));
-			else error = ae.removeCourse(course, shadow.equals("shadow"));
+			if(mode.equals("add")) error =  ae.addCourse(course, shadow.equals("shadow"), semester);
+			else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"), semester);
+			else error = ae.editCourse(course, shadow.equals("shadow"), semester );
 			if(error == null)
 				response.sendRedirect("admin.jsp");
 			else
@@ -113,7 +115,11 @@ public class AdminSv extends HttpServlet {
 					staffUpT2.equals("append"), staffUpT1.equals("assignment"), 
 					shadow.equals("shadows"));
 			
-			response.sendRedirect("admin.jsp");
+			if (error == null) response.sendRedirect("admin.jsp");
+			else 
+			{
+				// err
+			}
 		} else if(f.compareTo("dispRecsPrefs") == 0){
 			String student = request.getParameter("stuname");
 			String dispType = request.getParameter("dispType");
@@ -125,12 +131,6 @@ public class AdminSv extends HttpServlet {
 		}
 		else {
 			response.sendRedirect("logout.jsp");
-		}
-		
-		Map map = request.getParameterMap();
-		
-		for(int i = 0; i < request.getParameterMap().size(); i++ ){
-			
 		}
 		
 		out.println("<script>setTimeout(function () {window.location.href = 'admin.jsp'; }, 2000);</script>");

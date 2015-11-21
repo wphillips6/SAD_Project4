@@ -35,9 +35,16 @@
 			
             Action:<br>
             <input type="radio" name="courseSetType" value="add" checked> Add Course
+            <input type="radio" name="courseSetType" value="edit"> Edit Course Semester
 			<input type="radio" name="courseSetType" value="remove"> Remove Course
 			<br><br>
 			
+			Semesters offered:<br>
+			<input type="radio" name="semester" value="EVERY" checked> All
+			<input type="radio" name="semester" value="FALL"> Fall
+			<input type="radio" name="semester" value="SPRING"> Spring
+			<input type="radio" name="semester" value="SUMMER"> Summer
+			<br><br>
 			Model Mode:<br>
             <input type="radio" name="modelModeType" value="standard" checked> Standard
 			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
