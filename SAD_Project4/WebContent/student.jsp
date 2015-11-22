@@ -48,6 +48,7 @@
 		<%
 		Student s = (Student)session.getAttribute("student");
 		List l = s.getDesiredCourses();
+		//System.out.println("Studnt List size:  " + l.size());
 		for(int i = 0; i < l.size(); i++){
 			Course c = (Course)l.get(i);
 			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
@@ -83,7 +84,8 @@
 			}
 			out.println("<input type=\"hidden\" name=\"function\" value=\"setPrefs\" /> ");
 			%>
-			<br><input type="submit" value="Submit New Preferences">
+			<br><span style="display: block;">Desired Number of Courses for next Term:</span><input type="text" name="numCourses" value="<% out.print(s.getNumDesiredCourses()); %>"/>
+			<br><br><input type="submit" value="Submit New Preferences">
 			</form>
 		</section>
 		

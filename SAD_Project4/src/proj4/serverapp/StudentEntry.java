@@ -46,6 +46,19 @@ public class StudentEntry {
 			e.printStackTrace();
 		}
   }
+  
+  public void setNumDesiredCourses(String studentID, int num) {
+		Student retVal = null;
+		String insStmt = "UPDATE CourseData.Student SET `NumCoursesDesired` = ? WHERE uID = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, num);
+			insPrepStmt.setString(2, studentID);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+  }
 
   public void getCoursePrefList(String studentID) {
   }

@@ -63,11 +63,15 @@ public class ServerApplication {
 			int n = rs.getRow();
 			if(n==1) {
 				retVal = new Student(rs.getString("uID"), rs.getString("name"),
-						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted"));
+						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted"), rs.getInt("NumCoursesDesired"));
 				ArrayList<Course> l = new ArrayList<Course>();
-				String[] arrCourses = rs.getString("Desired Courses").split(",");
-				for(int i = 0; i < arrCourses.length; i++) {
-					l.add(this.getCourseByNum(arrCourses[i]));
+				//System.out.println("Setting courses into student:  " + rs.getString("Desired Courses") + " comp: " + rs.getString("Desired Courses").equals(""));
+				if(!rs.getString("Desired Courses").equals("")){
+					String[] arrCourses = rs.getString("Desired Courses").split(",");
+					for(int i = 0; i < arrCourses.length; i++) {
+						l.add(this.getCourseByNum(arrCourses[i]));
+						//System.out.println("Adding "+arrCourses[i]);
+					}
 				}
 				retVal.setDesiredCourses(l);
 				//TODO: Get Recommendation

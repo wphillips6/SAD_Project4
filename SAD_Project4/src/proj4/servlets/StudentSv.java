@@ -95,12 +95,14 @@ public class StudentSv extends HttpServlet {
 	    				//out.println("3");
 	    				newPrefString += ","+prefs[i];
 	    			} else {
+	    				// I hit a 0 or ---- which means I'm ignoring the rest of the preferences
 	    				break;
 	    			}
 	    		}
 	    	}
 	    	out.println(newPrefString);
 	    	se.setDesiredCourses(s, newPrefString);
+	    	se.setNumDesiredCourses(s, Integer.parseInt(request.getParameter("numCourses")));
 	    	out.println("<a href=\"student.jsp\">Back</a>");
 	    	session.setAttribute("student", se.getStudent(s));
 	    } else if( f.compareTo("setCourse") == 0) {

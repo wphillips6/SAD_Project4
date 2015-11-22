@@ -12,16 +12,18 @@ public class Student {
 	private int creditsComplete;
 	private int coursesComplete;
 	private List<Course> desiredCourses;
+	private int numDesiredCourses;
 	
 	public Student() {
 		
 	}
 	
-    public Student(String uID, String name, int credits, int courses) {
+    public Student(String uID, String name, int credits, int courses, int numDesiredCourses) {
     	this.uID = uID;
     	this.name = name;
     	creditsComplete = credits;
     	coursesComplete = courses;
+    	this.numDesiredCourses = numDesiredCourses;
     }
     
     public String getUID() {
@@ -34,6 +36,10 @@ public class Student {
     
     public List<Course> getDesiredCourses() {
     	return desiredCourses;
+    }
+    
+    public int getNumDesiredCourses() {
+    	return numDesiredCourses;
     }
 
     public void setDesiredCourses(List<Course> desiredCourses) {
