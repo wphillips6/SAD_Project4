@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.mysql.jdbc.Driver;
+import java.util.List;
 
 import proj4.common.Student;
 import proj4.common.Professor;
@@ -28,16 +28,12 @@ public class ServerApplication {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/CourseData", USER, PASS);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		se = new StudentEntry(dbConnection);
@@ -54,11 +50,6 @@ public class ServerApplication {
 		return 0;
 	}
 
-	public Course getCourse(String courseID) {
-		//TODO:  SQL query to get course from DB and create object from it
-		return null;
-	}
-
 	public Student getStudent(String studentID) {
 		Student retVal = null;
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ?";
@@ -73,7 +64,6 @@ public class ServerApplication {
 						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return retVal;
@@ -93,7 +83,6 @@ public class ServerApplication {
 						rs.getInt("AvailNextTerm"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return retVal;
@@ -113,7 +102,6 @@ public class ServerApplication {
 						rs.getInt("AvailNextTerm"));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return retVal;
@@ -130,9 +118,6 @@ public class ServerApplication {
 	 * 					2 - successful student login
 	 */
 	public int validateUser(String usrname, String pwd) {
-		//TODO:  SQL query to determine if 1) this is a valid admin login
-		// or 2) this is a successful student login
-		
 		System.out.println("Checking credentials in database...");
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
@@ -158,14 +143,13 @@ public class ServerApplication {
 				return 1;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return 0;
 	}
 
-	public Course getCourseByName(String name) {
+	public Course getCourse(String name) {
 		Course retVal = null;
 		String sel = "SELECT * from CourseData.Professor WHERE CourseID = ?";
 		try {
@@ -179,10 +163,24 @@ public class ServerApplication {
 						"", rs.getString("PreRequisite"), null);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return retVal;
+	}
+	
+	public List<TeacherAssistant> getAllTAs() {
+		//TODO
+		return null;
+	}
+	
+	public List<Professor> getAllProfs() {
+		//TODO
+		return null;
+	}
+	
+	public List<Student> getAllStudents() {
+		//TODO
+		return null;
 	}
 	
 	/**
