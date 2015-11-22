@@ -46,7 +46,7 @@ public class CourseCatalog {
 	public Course getCourse(String s) {
 		for (int i = 0; i < availableCourses.size(); i++) {
 			Course c = availableCourses.get(i);
-			if ( c.getName().equals(s)) {
+			if ( c.getNumber().equals(s)) {
 				return c;
 			}
 		}

@@ -1,6 +1,9 @@
 package proj4.common;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import proj4.common.Semester.SemesterTerm;
 
 public class Student {
 	
@@ -30,10 +33,14 @@ public class Student {
     }
     
     public List<Course> getDesiredCourses() {
-        return desiredCourses;
+    	return desiredCourses;
     }
 
     public void setDesiredCourses(List<Course> desiredCourses) {
         this.desiredCourses = desiredCourses;
+    }
+    
+    public String getName(){
+    	return name;
     }
 }

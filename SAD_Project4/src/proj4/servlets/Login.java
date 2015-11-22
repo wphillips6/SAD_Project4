@@ -66,10 +66,10 @@ public class Login extends HttpServlet {
 	    int loginValidation = sa.validateUser(username, password);
 	    //if( request.getParameter("username").compareTo("user1") == 0){
 	    if( loginValidation == 2 ) {  // This is a student login
-	    	session.setAttribute("username", "user1");
+	    	session.setAttribute("username", username);
 	    	session.setAttribute("isadmin", "0");
 	    	session.setAttribute("srvapp", sa);
-	    	//session.setAttribute("student", sa.getStudent("studentID"));
+	    	session.setAttribute("student", sa.getStudent(username));
 	    	response.sendRedirect("student.jsp");
 	    //} else if( request.getParameter("username").compareTo("user2") == 0){
 	    } else if( loginValidation == 1 || request.getParameter("username").compareTo("user2") == 0 ) {  // This is an admin login

@@ -37,7 +37,20 @@ nav {
 
 section {
 	margin-left: 206px;
+	padding-left: 10px;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	border: 3px solid red;
+}
+
+select {
+	display: block;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
 }
