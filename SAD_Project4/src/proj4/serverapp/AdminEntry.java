@@ -102,7 +102,55 @@ public class AdminEntry {
 	*/
 	public String addCourse( String desc, boolean shadow, String semester) {
 		String error = null;
+		String[] courses = desc.split(",");
+		for(int i = 0; i < courses.length; ++i)
+		{
+			String[] idDesc = courses[i].split(" ");
+			String cid = idDesc[0];
+			String cDesc = "";
+			if(idDesc.length > 1) cDesc = idDesc[1];
+			char[] cidChars = idDesc[0].toCharArray();
+			int cNumStrt = 0;
+			for(int j = 0; j < cidChars.length && cNumStrt == 0; ++j){
+				if (cidChars[j] == '0' ||
+					cidChars[j] == '1' ||
+					cidChars[j] == '2' || 
+					cidChars[j] == '3' ||
+					cidChars[j] == '4' || 
+					cidChars[j] == '5' ||
+					cidChars[j] == '6' ||
+					cidChars[j] == '7' ||
+					cidChars[j] == '8' ||
+					cidChars[j] == '9') cNumStrt = j; 
+		
+			}
+			if(idDesc.length > 1) cDesc = idDesc[1];
+			if((cDesc == "" || cNumStrt == 0) && error == null)
+			{
+				error = new String("Course entry " +  String.valueOf(i) + 
+						           "has invalid format.\n");
+			}
+			else if(cDesc == "" || cNumStrt == 0)
+			{
+				error += " course entry " +  String.valueOf(i) + 
+						 "is also invalid.\n";
+			}
+			else
+			{
+				Semester sem;
+				if (semester.equals("FALL"))
+					sem = new Semester(Semester.SemesterTerm.FALL);
+				else if (semester.equals("SPRING"))
+					sem = new Semester(Semester.SemesterTerm.SPRING);
+				else if (semester.equals("SUMMER"))
+					sem = new Semester(Semester.SemesterTerm.SUMMER);
+				else sem = new Semester(Semester.SemesterTerm.EVERY);
+				Course c = new Course(cid,cid.substring(cNumStrt), cDesc, "",sem );
+				myServerApplication.updateCourse(c, shadow, this.s);
+			}
+		}
 		return error;
+		
 	}
 	
 	/**
@@ -116,7 +164,31 @@ public class AdminEntry {
 	*/
 	public String removeCourse( String desc, boolean shadow) {
 		String error = null;
+		String[] courses = desc.split(",");
+		for(int i = 0; i < courses.length; ++i)
+		{
+			String[] idDesc = courses[i].split(" ");
+			String cid = idDesc[0];
+			Course c = myServerApplication.getCourse(cid);//, shadow);
+			if(c == null && error == null)
+			{
+				error = new String("Course entry " +  String.valueOf(i) + 
+						           "is invalid.\n");
+			}
+			else if(c == null)
+			{
+				error += " course entry " +  String.valueOf(i) + 
+						 "is also invalid.\n";
+			}
+			else
+			{
+
+				//myServerApplication.updateCourse(c, shadow, this.s);
+				//myServerApplication.removeCourse(c, shadow);
+			}
+		}
 		return error;
+		
 	}
 	
 	/**
@@ -137,7 +209,7 @@ public class AdminEntry {
 		{
 			String[] idDesc = courses[i].split(" ");
 			String cid = idDesc[0];
-			Course c = myServerApplication.getCourse(cid);
+			Course c = myServerApplication.getCourse(cid);//,shadow);
 			if(c == null && error == null)
 			{
 				error = new String("Course entry " +  String.valueOf(i) + 
