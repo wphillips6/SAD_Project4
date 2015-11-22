@@ -128,12 +128,16 @@ public class AdminEntry {
 			if((cDesc == "" || cNumStrt == 0) && error == null)
 			{
 				error = new String("Course entry " +  String.valueOf(i) + 
-						           "has invalid format.\n");
+						           "has invalid format.\n\n Addition of a " +
+						           " course to the catalog requires inputs\n" +
+						           " to be formatted as follows:\n\n <Department" +
+						           " abbreviation><Course number> <Course Descriptor>" +
+						           "\n\n With each entry delimited by a comma.");
 			}
 			else if(cDesc == "" || cNumStrt == 0)
 			{
 				error += " course entry " +  String.valueOf(i) + 
-						 "is also invalid.\n";
+						 "also has invalid format.\n";
 			}
 			else
 			{
