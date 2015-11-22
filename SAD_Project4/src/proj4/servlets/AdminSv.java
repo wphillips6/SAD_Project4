@@ -67,28 +67,28 @@ public class AdminSv extends HttpServlet {
 		}
 		
 		// Set response content type
-		response.setContentType("text/html");
-		// Determine which form was submitted and call appropriate methods
-		out.println("Function: " + request.getParameter("function"));
-		String f = request.getParameter("function");
-		if( f.compareTo("setEnrollLims") == 0) 
-		{
-			String course = request.getParameter("crsname");
-			String limit = request.getParameter("crslim");
-			String shadow = request.getParameter("modelModeType");
-			 
+	    response.setContentType("text/html");
+
+	    // Determine which form was submitted and call appropriate methods
+	    out.println("Function:  " + request.getParameter("function"));
+	    String f = request.getParameter("function");
+	    if( f.compareTo("setEnrollLims") == 0) {
+	    	String course = request.getParameter("crsNum");
+	    	String limit = request.getParameter("crslim");
+	    	String shadow = request.getParameter("modelModeType");
 			String error = ae.setEnrollLimit(Integer.parseInt(limit), course, shadow.equals("shadow"));
 			if(error == null) response.sendRedirect("admin.jsp");
 			else{
 				
 			} //error
-				
-		} else if( f.compareTo("setCourse") == 0) 
-		{
-			String course = request.getParameter("crsname");
-			String mode = request.getParameter("courseSetType");
-			String shadow = request.getParameter("modelModeType");
-			String semester = request.getParameter("semester");
+
+	    } else if( f.compareTo("setCourse") == 0) {
+	    	
+	    	String course = request.getParameter("crsname");
+	    	String mode = request.getParameter("courseSetType");
+	    	String shadow = request.getParameter("modelModeType");
+	    	
+	    	String semester = request.getParameter("semester");
 			String error = null;
 			if(mode.equals("add")) error =  ae.addCourse(course, shadow.equals("shadow"), semester);
 			else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"));
@@ -100,27 +100,37 @@ public class AdminSv extends HttpServlet {
 				
 			
 			}
-		} else if( f.compareTo("setStaffAsts")== 0){
-			String courses = request.getParameter("crsname");
-			String staffid = request.getParameter("staffname");
-			String stafftype = request.getParameter("stafftype");
-			String staffUpT1 = request.getParameter("staffUpdateType1");
-			String staffUpT2 = request.getParameter("staffUpdateType2");
-			String shadow = request.getParameter("modelModeType");
-			String error = null;
-			if(stafftype.equals("ta")) error = ae.setTACourses(staffid, courses, 
-					staffUpT2.equals("append"), staffUpT1.equals("assignment"), 
-					shadow.equals("shadow")); 
-			else error = ae.setProfessorCourses(staffid, courses, 
-					staffUpT2.equals("append"), staffUpT1.equals("assignment"), 
-					shadow.equals("shadows"));
-			
-			if (error == null) response.sendRedirect("admin.jsp");
-			else 
-			{
-				// err
-			}
-		} else if(f.compareTo("dispRecsPrefs") == 0){
+
+	    } else if( f.compareTo("setStaffAsts")== 0){
+	    	
+//			<form method="POST" action="Admin">
+//		<input type="hidden" name="function" value="setStaffAsts" /> 
+//			Staff ID:<input name="staffname" /> <br>
+//			Available:<select name="available"><option value="0">No</option><option value="1">Yes</option></select><br>
+//			Competencies:<input name="competencies" /> <br>
+//			Model Mode:<br>
+//        <input type="radio" name="modelModeType" value="standard" checked> Standard
+//		<input type="radio" name="modelModeType" value="shadow"> Shadow Mode
+//		<br><br>
+//		<input type="submit" value="Make Change" />
+//	</form>
+	
+	    	String staffid = request.getParameter("staffname");
+	    	int available = Integer.parseInt(((String)request.getParameter("available")));
+	    	String competencies= request.getParameter("competencies");
+	    	String shadow = request.getParameter("modelModeType");
+	    	
+	    	char role = staffid.charAt(0);
+	    	if( role == 't'){
+	    		ae.updateTAAvailable(staffid, available);
+	    		ae.updateTACompetencies(staffid, competencies);
+	    	} else if (role == 'p'){
+	    		ae.updateProfAvailable(staffid, available);
+	    		ae.updateProfCompetencies(staffid, competencies);
+	    	}
+	    	response.sendRedirect("admin.jsp");
+
+	    } else if(f.compareTo("dispRecsPrefs") == 0){
 			String student = request.getParameter("stuname");
 			String dispType = request.getParameter("dispType");
 			String error = ae.getStudentInfo(student, dispType.equals("prefs") );
@@ -128,11 +138,16 @@ public class AdminSv extends HttpServlet {
 			else{
 				// err
 			}
-		}
-		else {
-			response.sendRedirect("logout.jsp");
-		}
-		
-		out.println("<script>setTimeout(function () {window.location.href = 'admin.jsp'; }, 2000);</script>");
+
+	    }
+	    
+	    
+	    else {
+	    	response.sendRedirect("logout.jsp");
+	    }
+
+	    //out.println("<a href=\"admin.jsp\">Back</a>");
+	    
+	    out.println("<script>setTimeout(function () {window.location.href = 'admin.jsp'; }, 2000);</script>");
 	}
 }

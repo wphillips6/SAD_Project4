@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="proj4.common.Course" %>
+<%@ page import="java.util.List" %>
+<%@ page import="proj4.serverapp.ServerApplication" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -45,6 +48,29 @@
 			<input type="radio" name="semester" value="SPRING"> Spring
 			<input type="radio" name="semester" value="SUMMER"> Summer
 			<br><br>
+			Model Mode:<br>
+            <input type="radio" name="modelModeType" value="standard" checked> Standard
+			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>
+			<input type="submit" value="Make Change" />
+		</form>
+		</section>
+				<section> <span>Enter Course and Action</span><br>
+		<form method="POST" action="Admin">
+			<input type="hidden" name="function" value="setCourse" /> 
+			Course ID:<input name="crsname" /> <br><br> 
+	
+			<%
+			ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
+			List<Course> crsList = sa.getAllCourses();
+			String crsTable = "<table><tr><th>Course Name</th><th>Offered</th></tr>";
+			for(int i = 0; i < crsList.size(); i++){
+				crsTable += "<tr><td>"+((Course)crsList.get(i)).getDescription()+"</td><td><input type=\"checkbox\"/></td></tr>";
+			}
+			crsTable += "</table>";
+			out.println(crsTable);
+			%>			
+			<br><br>
+			
 			Model Mode:<br>
             <input type="radio" name="modelModeType" value="standard" checked> Standard
 			<input type="radio" name="modelModeType" value="shadow"> Shadow Mode<br><br>

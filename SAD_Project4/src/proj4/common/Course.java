@@ -17,7 +17,15 @@ public class Course implements Comparable {
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
-		this.setEnrollLim(200);
+		this.enrollment = 0;
+	}
+
+	public int getEnrollLim() {
+		return enrollment;
+	}
+
+	public void setEnrollLim(int enrollLim) {
+		this.enrollment = enrollLim;
 	}
 
 
@@ -70,11 +78,6 @@ public class Course implements Comparable {
 		this.semester = s;
 	}
 
-	public void setEnrollLim(int limit) {
-		// TODO Auto-generated method stub
-		enrollment = limit;
-	}
-	
 	@Override
 	public int compareTo(Object c) {
 		System.out.println("Comparing "+this.getID()+" with "+((Course)c).getID());

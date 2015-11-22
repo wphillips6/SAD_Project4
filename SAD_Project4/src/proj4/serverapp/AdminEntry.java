@@ -1,5 +1,7 @@
 package proj4.serverapp;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -12,20 +14,23 @@ import org.apache.tomcat.jni.Time;
 
 
 public class AdminEntry {
-	public Integer enrollLimit;
-	public List<String> semesterCourse;
+	private Integer enrollLimit;
+	private List<String> semesterCourse;
 	public Semester s;
-	public List<String> professor;
-	public List<String> professorCourses;
-	public List<String> taPool;
-	public List<String> taCourses;
-	public ServerApplication myServerApplication;
+	private List<String> professor;
+	private List<String> professorCourses;
+	private List<String> taPool;
+	private List<String> taCourses;
+	private ServerApplication sa;
+	private Connection dbConnection;
 
 	public AdminEntry() {
 
 	}
 	
-	public AdminEntry( Connection dbconnection) {
+	public AdminEntry( ServerApplication sa, Connection dbConnection) {
+		  this.dbConnection = dbConnection;
+		  this.sa = sa;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		int month = Calendar.getInstance().get(Calendar.MONTH);
 		int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -62,31 +67,17 @@ public class AdminEntry {
 	*
 	*/
 	public String setEnrollLimit( int limit, String course, boolean shadow) {
-		String error = null;
-		String[] courses = course.split(",");
-		for(int i = 0; i < courses.length; ++i)
-		{
-			String[] idDesc = courses[i].split(" ");
-			String cid = idDesc[0];
-			Course c = myServerApplication.getCourse(cid);
-			if(c == null && error == null)
-			{
-				error = new String("Course entry " +  String.valueOf(i) + 
-						           "is invalid.\n");
-			}
-			else if(c == null)
-			{
-				error += " course entry " +  String.valueOf(i) + 
-						 "is also invalid.\n";
-			}
-			else
-			{
-				c.setEnrollLim(limit);
-				myServerApplication.updateCourse(c, shadow, this.s);
-			}
+		String error = "";
+		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? WHERE CourseNum = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, limit);
+			insPrepStmt.setString(2, course);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			error = e.getMessage();
 		}
 		return error;
-		
 	}
 	public void getSemesterCourse() {
 		
@@ -150,11 +141,12 @@ public class AdminEntry {
 					sem = new Semester(Semester.SemesterTerm.SUMMER);
 				else sem = new Semester(Semester.SemesterTerm.EVERY);
 				Course c = new Course(cid,cid.substring(cNumStrt), cDesc, "",sem );
-				myServerApplication.updateCourse(c, shadow, this.s);
+				sa.updateCourse(c, shadow, this.s);
 			}
 		}
 		return error;
 		
+
 	}
 	
 	/**
@@ -173,7 +165,7 @@ public class AdminEntry {
 		{
 			String[] idDesc = courses[i].split(" ");
 			String cid = idDesc[0];
-			Course c = myServerApplication.getCourse(cid);//, shadow);
+			Course c = sa.getCourse(cid);//, shadow);
 			if(c == null && error == null)
 			{
 				error = new String("Course entry " +  String.valueOf(i) + 
@@ -213,7 +205,7 @@ public class AdminEntry {
 		{
 			String[] idDesc = courses[i].split(" ");
 			String cid = idDesc[0];
-			Course c = myServerApplication.getCourse(cid);//,shadow);
+			Course c = sa.getCourse(cid);//,shadow);
 			if(c == null && error == null)
 			{
 				error = new String("Course entry " +  String.valueOf(i) + 
@@ -235,7 +227,7 @@ public class AdminEntry {
 					sem = new Semester(Semester.SemesterTerm.SUMMER);
 				else sem = new Semester(Semester.SemesterTerm.EVERY);
 				c.setSemester(sem);
-				myServerApplication.updateCourse(c, shadow, this.s);
+				sa.updateCourse(c, shadow, this.s);
 			}
 		}
 		return error;
@@ -283,11 +275,53 @@ public class AdminEntry {
 		System.out.println("AE: adding TA " + name);
 	}
 	
-	public void updateTA(String taID, Boolean isAvailNextTerm) {
+	public void updateTAAvailable(String taID, int isAvailNextTerm) {
+		String insStmt = "UPDATE CourseData.TA SET `AvailNextTerm` = ? WHERE StaffID = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, isAvailNextTerm);
+			insPrepStmt.setString(2, taID);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateProfAvailable(String profID, int isAvailNextTerm) {
+		String insStmt = "UPDATE CourseData.Professor SET `AvailNextTerm` = ? WHERE StaffID = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, isAvailNextTerm);
+			insPrepStmt.setString(2, profID);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateTACompetencies(String taID, String comp) {
+		String insStmt = "UPDATE CourseData.Professor SET `TACompetencies` = ? WHERE StaffID = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setString(1, comp);
+			insPrepStmt.setString(2, taID);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public void updateProf(String profID, Boolean isAvailNextTerm) {
+	public void updateProfCompetencies(String profID, String comp) {
+		String insStmt = "UPDATE CourseData.Professor SET `ProfCompetencies` = ? WHERE StaffID = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setString(1, comp);
+			insPrepStmt.setString(2, profID);
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
