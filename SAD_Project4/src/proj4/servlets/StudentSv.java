@@ -106,7 +106,7 @@ public class StudentSv extends HttpServlet {
 	    	out.println("<a href=\"student.jsp\">Back</a>");
 	    	session.setAttribute("student", se.getStudent(s));
 	    } else if( f.compareTo("setCourse") == 0) {
-	    	
+
 	    }
 	}
 

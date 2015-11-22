@@ -70,10 +70,12 @@ public class AdminSv extends HttpServlet {
 	    out.println("Function:  " + request.getParameter("function"));
 	    String f = request.getParameter("function");
 	    if( f.compareTo("setEnrollLims") == 0) {
-	    	String course = request.getParameter("crsname");
+	    	String course = request.getParameter("crsNum");
 	    	String limit = request.getParameter("crslim");
 	    	String shadow = request.getParameter("modelModeType");
-	    	response.sendRedirect("admin.jsp");
+	    	out.println(course + "  " + limit + "  " + shadow);
+	    	ae.setEnrollLimit(Integer.parseInt(limit), course);
+	    	//response.sendRedirect("admin.jsp");
 
 	    } else if( f.compareTo("setCourse") == 0) {
 	    	
@@ -85,12 +87,31 @@ public class AdminSv extends HttpServlet {
 
 	    } else if( f.compareTo("setStaffAsts")== 0){
 	    	
-	    	String courses = request.getParameter("crsname");
+//			<form method="POST" action="Admin">
+//		<input type="hidden" name="function" value="setStaffAsts" /> 
+//			Staff ID:<input name="staffname" /> <br>
+//			Available:<select name="available"><option value="0">No</option><option value="1">Yes</option></select><br>
+//			Competencies:<input name="competencies" /> <br>
+//			Model Mode:<br>
+//        <input type="radio" name="modelModeType" value="standard" checked> Standard
+//		<input type="radio" name="modelModeType" value="shadow"> Shadow Mode
+//		<br><br>
+//		<input type="submit" value="Make Change" />
+//	</form>
+	
 	    	String staffid = request.getParameter("staffname");
-	    	String stafftype = request.getParameter("stafftype");
-	    	String staffUpT1 = request.getParameter("staffUpdateType1");
-	    	String staffUpT2 = request.getParameter("staffUpdateType2");
+	    	int available = Integer.parseInt(((String)request.getParameter("available")));
+	    	String competencies= request.getParameter("competencies");
 	    	String shadow = request.getParameter("modelModeType");
+	    	
+	    	char role = staffid.charAt(0);
+	    	if( role == 't'){
+	    		ae.updateTAAvailable(staffid, available);
+	    		ae.updateTACompetencies(staffid, competencies);
+	    	} else if (role == 'p'){
+	    		ae.updateProfAvailable(staffid, available);
+	    		ae.updateProfCompetencies(staffid, competencies);
+	    	}
 	    	response.sendRedirect("admin.jsp");
 
 	    } else if(f.compareTo("dispRecsPrefs") == 0){
@@ -99,16 +120,15 @@ public class AdminSv extends HttpServlet {
 	    	response.sendRedirect("admin.jsp");
 
 	    }
+	    
+	    
 	    else {
 	    	response.sendRedirect("logout.jsp");
 	    }
 
-	    Map map = request.getParameterMap();
-	    for(int i = 0; i < request.getParameterMap().size(); i++ ){
-	    	
-	    }
+	    out.println("<a href=\"admin.jsp\">Back</a>");
 	    
-	    out.println("<script>setTimeout(function () {window.location.href = 'admin.jsp'; }, 2000);</script>");
+	    //out.println("<script>setTimeout(function () {window.location.href = 'admin.jsp'; }, 2000);</script>");
 	}
 
 }

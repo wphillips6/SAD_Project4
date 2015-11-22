@@ -6,16 +6,26 @@ public class Course implements Comparable {
 	private String description;
 	private String prerequisite;
 	private Semester semester;
+	private int enrollLim;
 
 	public Course() {
 	}
 
-	public Course(String i, String n, String d, String p, Semester s) {
+	public Course(String i, String n, String d, String p, Semester s, int enrollLim) {
 		this.setID(i);
 		this.setNumber(n);
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
+		this.enrollLim = enrollLim;
+	}
+
+	public int getEnrollLim() {
+		return enrollLim;
+	}
+
+	public void setEnrollLim(int enrollLim) {
+		this.enrollLim = enrollLim;
 	}
 
 	public String getID() {

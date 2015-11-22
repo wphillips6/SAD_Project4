@@ -39,7 +39,7 @@ public class ServerApplication {
 			e.printStackTrace();
 		}
 		se = new StudentEntry(this, dbConnection);
-		ae = new AdminEntry(dbConnection);
+		ae = new AdminEntry(this, dbConnection);
 	}
 	
 	public static void main( String[] args) {
@@ -94,6 +94,7 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new TeacherAssistant(rs.getString("StaffID"), rs.getString("Name"),
 						rs.getInt("AvailNextTerm"));
+				retVal.setStrComp(rs.getString("TACompetencies"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -113,6 +114,7 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new Professor(rs.getString("StaffID"), rs.getString("Name"),
 						rs.getInt("AvailNextTerm"));
+				retVal.setStrComp(rs.getString("ProfCompetencies"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -173,7 +175,7 @@ public class ServerApplication {
 			int n = rs.getRow();
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), rs.getString("Description"),
-						"", rs.getString("PreRequisite"), null);
+						"", rs.getString("PreRequisite"), null, rs.getInt("CourseLimit"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -200,7 +202,7 @@ public class ServerApplication {
 			int n = rs.getRow();
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), num, rs.getString("Description"),
-						rs.getString("Prerequisite"), null);
+						rs.getString("Prerequisite"), null, rs.getInt("CourseLimit"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -230,13 +232,12 @@ public class ServerApplication {
 			PreparedStatement sqlSelTA = dbConnection.prepareStatement(selTA);
 			ResultSet rs = sqlSelTA.executeQuery();
 			while( rs.next() ){
-				retVal.add(new TeacherAssistant(rs.getString("StaffID"), rs.getString("Name"),
-						rs.getInt("AvailNextTerm")));
+				retVal.add(this.getTA(rs.getString("StaffID")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return retVal;
 	}
 	
 	public List<Professor> getAllProfs() {
@@ -246,8 +247,7 @@ public class ServerApplication {
 			PreparedStatement sqlSelProf = dbConnection.prepareStatement(selProf);
 			ResultSet rs = sqlSelProf.executeQuery();
 			while( rs.next() ) {
-				retVal.add(new Professor(rs.getString("StaffID"), rs.getString("Name"),
-						rs.getInt("AvailNextTerm")));
+				retVal.add(this.getProf(rs.getString("StaffID")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

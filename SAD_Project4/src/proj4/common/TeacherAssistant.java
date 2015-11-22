@@ -10,6 +10,7 @@ public class TeacherAssistant {
 	private int availNextTerm;
 	private  List<Course> courses;
 	private  List<Course> teachableCourses;
+	private String strComp;
 
 	/**
 	 * 
@@ -21,18 +22,38 @@ public class TeacherAssistant {
 		this.taID = "";
 		this.name = "";
 		this.availNextTerm = 0;
+		this.strComp = "";
 	}
 	
 	public TeacherAssistant(String id, String name, int availNextTerm) {
 		this.taID = id;
 		this.name = name;
 		this.availNextTerm = availNextTerm;
+		this.strComp = "";
+	}
+	
+	public int getAvailNextTerm() {
+		return availNextTerm;
 	}
 
-	public void getName() {
+	public void setAvailNextTerm(int availNextTerm) {
+		this.availNextTerm = availNextTerm;
+	}
+
+	public String getStrComp() {
+		return strComp;
+	}
+
+	public void setStrComp(String strComp) {
+		this.strComp = strComp;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public void setName(String n) {
+		this.name = name;
 	}
 
 	public void getCourses() {
@@ -49,4 +70,7 @@ public class TeacherAssistant {
 	public void setTeachableCourses(List<Course> courses) {
 	}
 
+	public String getTaID() {
+		return taID;
+	}
 }
