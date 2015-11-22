@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import proj4.common.Semester;
 import proj4.common.Student;
 import proj4.common.Professor;
 import proj4.common.Course;
@@ -201,6 +202,11 @@ public class ServerApplication {
 	 */
 	public AdminEntry getAdminEntry() {
 		return ae;
+	}
+
+	public void updateCourse(Course c, boolean shadow, Semester s) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

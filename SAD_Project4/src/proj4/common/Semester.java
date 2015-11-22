@@ -18,12 +18,21 @@ public class Semester {
     	this.term = s;
     }
 
+    public Semester(String semesterID, SemesterTerm t) {
+    	this.term = t;
+    	this.id = semesterID;
+    }
+    
     public SemesterTerm getTerm() {
         return term;
     }
 
-    public void setTerm(String semesterID, SemesterTerm term) {
-        this.term = term;
-        this.id = semesterID;
+    public String getId() {
+        return id;
     }
+    
+    public void setTerm( SemesterTerm term) {
+        this.term = term;
+    }
+
 }

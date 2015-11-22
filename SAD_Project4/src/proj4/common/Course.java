@@ -6,6 +6,7 @@ public class Course {
 	private String description;
 	private String prerequisite;
 	private Semester semester;
+	private int enrollment;
 
 	public Course() {
 	}
@@ -16,8 +17,19 @@ public class Course {
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
+		this.setEnrollLim(200);
 	}
 
+
+	public Course(String i, String n, String d, String p, Semester s, int enroll) {
+		this.setID(i);
+		this.setName(n);
+		this.setDescription(d);
+		this.setPrerequisite(p);
+		this.setSemester(s);
+		this.setEnrollLim(enroll);
+	}
+	
 	public String getID() {
 		return id;
 	}
@@ -56,5 +68,10 @@ public class Course {
 
 	public void setSemester(Semester s) {
 		this.semester = s;
+	}
+
+	public void setEnrollLim(int limit) {
+		// TODO Auto-generated method stub
+		enrollment = limit;
 	}
 }

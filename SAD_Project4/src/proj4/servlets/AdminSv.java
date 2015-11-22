@@ -91,7 +91,7 @@ public class AdminSv extends HttpServlet {
 			String semester = request.getParameter("semester");
 			String error = null;
 			if(mode.equals("add")) error =  ae.addCourse(course, shadow.equals("shadow"), semester);
-			else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"), semester);
+			else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"));
 			else error = ae.editCourse(course, shadow.equals("shadow"), semester );
 			if(error == null)
 				response.sendRedirect("admin.jsp");

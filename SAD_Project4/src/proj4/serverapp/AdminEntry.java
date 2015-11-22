@@ -34,30 +34,57 @@ public class AdminEntry {
 		if((month == Calendar.AUGUST && day >= 17) || month == Calendar.SEPTEMBER || 
 			month == Calendar.OCTOBER || month == Calendar.NOVEMBER || 
 			month == Calendar.DECEMBER || (month == Calendar.JANUARY && day <= 11)){
-			s.setTerm(String.valueOf(year) + "SPR", Semester.SemesterTerm.SPRING);
+			s = new Semester(String.valueOf(year) + "SPR", Semester.SemesterTerm.SPRING);
 		}
 		else if((month == Calendar.JANUARY && day > 11) || month == Calendar.FEBRUARY ||
 				 month == Calendar.MARCH || month == Calendar.APRIL || 
 				 (month == Calendar.MAY && day < 11)){
-			s.setTerm(String.valueOf(year) + "SUM", Semester.SemesterTerm.SUMMER);
+			s = new Semester(String.valueOf(year) + "SUM", Semester.SemesterTerm.SUMMER);
 		}
-		else s.setTerm(String.valueOf(year) + "FAL", Semester.SemesterTerm.FALL);
+		else s = new Semester(String.valueOf(year) + "FAL", Semester.SemesterTerm.FALL);
 	}
 	
-	public void getEnrollLimit() {
-		
-	}
 	
 	/**
+	* Method setEnrollLimit sets the enrollment limit to the value entered
+	*                       by the administrator for the course indicated
+	*                       in the next semester. an error is returned if
+	*                       the course specified does not exist in the 
+	*                       requested model, or if an invalid limit is
+	*                       specified 
+	* @param limit  integer number corresponding to the desired maximum
+	*               capacity of the course for the active semester  
+	* @param course string descriptor of a course in the system
+	* @param shadow should the limit be applied to the course in the shadow
+	*               or standard model?
+	* @return error string descriptor describing why the operation is 
+	*               unsuccessful
 	*
-	* @param limit
-	 * @param error 
-	 * @return 
-	 * @return 
 	*/
 	public String setEnrollLimit( int limit, String course, boolean shadow) {
 		String error = null;
-		
+		String[] courses = course.split(",");
+		for(int i = 0; i < courses.length; ++i)
+		{
+			String[] idDesc = courses[i].split(" ");
+			String cid = idDesc[0];
+			Course c = myServerApplication.getCourse(cid);
+			if(c == null && error == null)
+			{
+				error = new String("Course entry " +  String.valueOf(i) + 
+						           "is invalid.\n");
+			}
+			else if(c == null)
+			{
+				error += " course entry " +  String.valueOf(i) + 
+						 "is also invalid.\n";
+			}
+			else
+			{
+				c.setEnrollLim(limit);
+				myServerApplication.updateCourse(c, shadow, this.s);
+			}
+		}
 		return error;
 		
 	}
@@ -66,28 +93,81 @@ public class AdminEntry {
 	}
 	
 	/**
-	 * @param shadow 
-	 * @param semester 
-	*
+	 * Method addCourse adds a course to the course catalog. if the course
+	 *                  already exists an error message is returned
+	 * @param shadow   Is this course to be added to the shadow model
+	 *                 accessible only by administrators?
+	 * @param semester during which semesters is this class to be offered 
+	*  @return error   returns an error message if the operation is unsuccessful
 	*/
 	public String addCourse( String desc, boolean shadow, String semester) {
 		String error = null;
 		return error;
 	}
 	
-	public String removeCourse( String desc, boolean shadow, String semester) {
+	/**
+	 * Method addCourse removes a course from the course catalog. if there is no
+	 *                  course identifiable by the entered desc an error is
+	 *                  returned
+	 *                  already exists an error message is returned
+	 * @param shadow   Is this course to be removed from the shadow model
+	 *                 accessible only by administrators?
+	*  @return error   returns an error message if the operation is unsuccessful
+	*/
+	public String removeCourse( String desc, boolean shadow) {
 		String error = null;
 		return error;
 	}
 	
-	public String editCourse(String course, boolean equals, String semester) 
+	/**
+	 * Method editCourse edits the semesters during which a course in the catalog
+	 *                   is offered. an error message is returned if the requested
+	 *                   assignment results in no change, or if the course req'd
+	 *                   for alteration does not exist in the model.
+	 * @param shadow   Edit the shadow version of the course within the model
+	 *                 accessible only by administrators?
+	 * @param semester the new semester assignment for when the class will be offered
+	*  @return error   returns an error message if the operation is unsuccessful
+	*/
+	public String editCourse(String course, boolean shadow, String semester) 
 	{	
-		// TODO Auto-generated method stub
-		return null;
+		String error = null;
+		String[] courses = course.split(",");
+		for(int i = 0; i < courses.length; ++i)
+		{
+			String[] idDesc = courses[i].split(" ");
+			String cid = idDesc[0];
+			Course c = myServerApplication.getCourse(cid);
+			if(c == null && error == null)
+			{
+				error = new String("Course entry " +  String.valueOf(i) + 
+						           "is invalid.\n");
+			}
+			else if(c == null)
+			{
+				error += " course entry " +  String.valueOf(i) + 
+						 "is also invalid.\n";
+			}
+			else
+			{
+				Semester sem;
+				if (semester.equals("FALL"))
+					sem = new Semester(Semester.SemesterTerm.FALL);
+				else if (semester.equals("SPRING"))
+					sem = new Semester(Semester.SemesterTerm.SPRING);
+				else if (semester.equals("SUMMER"))
+					sem = new Semester(Semester.SemesterTerm.SUMMER);
+				else sem = new Semester(Semester.SemesterTerm.EVERY);
+				c.setSemester(sem);
+				myServerApplication.updateCourse(c, shadow, this.s);
+			}
+		}
+		return error;
+		
 	}
 	
 	public String getSemester() {
-		return "";
+		return s.getId();
 	}
 	
 	public void setSemester( String s) {
