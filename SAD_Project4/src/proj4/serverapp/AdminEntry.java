@@ -1,6 +1,8 @@
 package proj4.serverapp;
 import java.sql.Connection;
 import java.util.Calendar;
+import java.util.List;
+
 import proj4.common.Course;
 import proj4.common.Professor;
 import proj4.common.Student;
@@ -32,14 +34,14 @@ public class AdminEntry {
 		if((month == Calendar.AUGUST && day >= 17) || month == Calendar.SEPTEMBER || 
 			month == Calendar.OCTOBER || month == Calendar.NOVEMBER || 
 			month == Calendar.DECEMBER || (month == Calendar.JANUARY && day <= 11)){
-			s.setTerm(String.valueOf(year), Semester.SemesterTerm.SPRING);
+			s.setTerm(String.valueOf(year) + "SPR", Semester.SemesterTerm.SPRING);
 		}
 		else if((month == Calendar.JANUARY && day > 11) || month == Calendar.FEBRUARY ||
 				 month == Calendar.MARCH || month == Calendar.APRIL || 
 				 (month == Calendar.MAY && day < 11)){
-			s.setTerm(String.valueOf(year), Semester.SemesterTerm.SUMMER);
+			s.setTerm(String.valueOf(year) + "SUM", Semester.SemesterTerm.SUMMER);
 		}
-		else s.setTerm(String.valueOf(year), Semester.SemesterTerm.FALL);
+		else s.setTerm(String.valueOf(year) + "FAL", Semester.SemesterTerm.FALL);
 	}
 	
 	public void getEnrollLimit() {
@@ -76,6 +78,12 @@ public class AdminEntry {
 	public String removeCourse( String desc, boolean shadow, String semester) {
 		String error = null;
 		return error;
+	}
+	
+	public String editCourse(String course, boolean equals, String semester) 
+	{	
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	public String getSemester() {
@@ -132,11 +140,7 @@ public class AdminEntry {
 		return null;
 	}
 
-	public String editCourse(String course, boolean equals, String semester) 
-	{	
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	
 }
