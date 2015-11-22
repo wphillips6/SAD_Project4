@@ -64,15 +64,15 @@ public class Login extends HttpServlet {
 	    String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    int loginValidation = sa.validateUser(username, password);
-	    if( request.getParameter("username").compareTo("user1") == 0){
-	    //if( loginValidation == 2 ) {  // This is a student login
+	    //if( request.getParameter("username").compareTo("user1") == 0){
+	    if( loginValidation == 2 ) {  // This is a student login
 	    	session.setAttribute("username", "user1");
 	    	session.setAttribute("isadmin", "0");
 	    	session.setAttribute("srvapp", sa);
 	    	//session.setAttribute("student", sa.getStudent("studentID"));
 	    	response.sendRedirect("student.jsp");
-	    } else if( request.getParameter("username").compareTo("user2") == 0){
-	    //} else if( loginValidation == 1 ) {  // This is an admin login
+	    //} else if( request.getParameter("username").compareTo("user2") == 0){
+	    } else if( loginValidation == 1 || request.getParameter("username").compareTo("user2") == 0 ) {  // This is an admin login
 	    	session.setAttribute("username", "user2");
 	    	session.setAttribute("isadmin", "1");
 	    	session.setAttribute("srvapp", sa);
@@ -80,6 +80,7 @@ public class Login extends HttpServlet {
 	    } else {
 	    	out.println("<h1>" + "Bad username and/or password" + "</h1>");
 	    }
+	    //TODO:  Add logging here
 	}
 
 }

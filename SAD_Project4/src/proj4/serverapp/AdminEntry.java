@@ -3,6 +3,9 @@ package proj4.serverapp;
 import java.sql.Connection;
 import java.util.List;
 import proj4.common.Course;
+import proj4.common.Professor;
+import proj4.common.Student;
+import proj4.common.TeacherAssistant;
 
 
 
@@ -88,5 +91,5 @@ public class AdminEntry {
 	public void addStudent(String name) {
 		System.out.println("AE: adding student " + name);
 	}
-
+	
 }

@@ -5,11 +5,11 @@ import java.util.Vector;
 
 public class TeacherAssistant {
 
-	public String name;
-
-	public List<Course> courses;
-
-	public List<Course> teachableCourses;
+	private String name;
+	private String taID;
+	private int availNextTerm;
+	private  List<Course> courses;
+	private  List<Course> teachableCourses;
 
 	/**
 	 * 
@@ -17,7 +17,16 @@ public class TeacherAssistant {
 	 */
 	public Vector myCourse;
 
-	public void TeacherAssistant() {
+	public TeacherAssistant() {
+		this.taID = "";
+		this.name = "";
+		this.availNextTerm = 0;
+	}
+	
+	public TeacherAssistant(String id, String name, int availNextTerm) {
+		this.taID = id;
+		this.name = name;
+		this.availNextTerm = availNextTerm;
 	}
 
 	public void getName() {
