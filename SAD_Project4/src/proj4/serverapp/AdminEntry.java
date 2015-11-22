@@ -1,13 +1,13 @@
 package proj4.serverapp;
 import java.sql.Connection;
 import java.util.Calendar;
-import java.util.List;
-
+import proj4.common.Course;
+import proj4.common.Professor;
+import proj4.common.Student;
+import proj4.common.TeacherAssistant;
+import proj4.common.Semester;
 import org.apache.tomcat.jni.Time;
 
-import proj4.common.Course;
-import proj4.common.Semester;
-import proj4.common.CourseCatalog;
 
 public class AdminEntry {
 	public Integer enrollLimit;
@@ -132,9 +132,11 @@ public class AdminEntry {
 		return null;
 	}
 
-	public String editCourse(String course, boolean equals, String semester) {
+	public String editCourse(String course, boolean equals, String semester) 
+	{	
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	
 }

@@ -13,6 +13,9 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+
+	<classpathentry kind="lib" path="/usr/share/java/mysql-connector-java-5.1.16.jar"/>
+
 	<classpathentry kind="lib" path="/home/ubuntu/opt/gurobi605/linux64/lib/gurobi.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
