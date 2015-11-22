@@ -292,4 +292,17 @@ public class ServerApplication {
 		return ae;
 	}
 
+	public void updateCourse(Course c, boolean shadow, Semester s) {
+		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? WHERE CourseNum = ?";
+		try {
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, c.getEnrollLim());
+			insPrepStmt.setString(2, c.getNumber());
+			insPrepStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }

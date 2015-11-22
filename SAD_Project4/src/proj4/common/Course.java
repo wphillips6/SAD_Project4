@@ -6,28 +6,38 @@ public class Course implements Comparable {
 	private String description;
 	private String prerequisite;
 	private Semester semester;
-	private int enrollLim;
+	private int enrollment;
 
 	public Course() {
 	}
 
-	public Course(String i, String n, String d, String p, Semester s, int enrollLim) {
+	public Course(String i, String n, String d, String p, Semester s) {
 		this.setID(i);
 		this.setNumber(n);
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
-		this.enrollLim = enrollLim;
+		this.enrollment = 0;
 	}
 
 	public int getEnrollLim() {
-		return enrollLim;
+		return enrollment;
 	}
 
 	public void setEnrollLim(int enrollLim) {
-		this.enrollLim = enrollLim;
+		this.enrollment = enrollLim;
 	}
 
+
+	public Course(String i, String n, String d, String p, Semester s, int enroll) {
+		this.setID(i);
+		this.setNumber(n);
+		this.setDescription(d);
+		this.setPrerequisite(p);
+		this.setSemester(s);
+		this.setEnrollLim(enroll);
+	}
+	
 	public String getID() {
 		return id;
 	}
@@ -67,7 +77,7 @@ public class Course implements Comparable {
 	public void setSemester(Semester s) {
 		this.semester = s;
 	}
-	
+
 	@Override
 	public int compareTo(Object c) {
 		System.out.println("Comparing "+this.getID()+" with "+((Course)c).getID());
