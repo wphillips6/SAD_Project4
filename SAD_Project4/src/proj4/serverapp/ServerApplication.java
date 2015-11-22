@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import proj4.common.Semester;
@@ -37,7 +38,7 @@ public class ServerApplication {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		se = new StudentEntry(dbConnection);
+		se = new StudentEntry(this, dbConnection);
 		ae = new AdminEntry(dbConnection);
 	}
 	
@@ -62,7 +63,18 @@ public class ServerApplication {
 			int n = rs.getRow();
 			if(n==1) {
 				retVal = new Student(rs.getString("uID"), rs.getString("name"),
-						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted"));
+						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted"), rs.getInt("NumCoursesDesired"));
+				ArrayList<Course> l = new ArrayList<Course>();
+				//System.out.println("Setting courses into student:  " + rs.getString("Desired Courses") + " comp: " + rs.getString("Desired Courses").equals(""));
+				if(!rs.getString("Desired Courses").equals("")){
+					String[] arrCourses = rs.getString("Desired Courses").split(",");
+					for(int i = 0; i < arrCourses.length; i++) {
+						l.add(this.getCourseByNum(arrCourses[i]));
+						//System.out.println("Adding "+arrCourses[i]);
+					}
+				}
+				retVal.setDesiredCourses(l);
+				//TODO: Get Recommendation
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,7 +164,7 @@ public class ServerApplication {
 
 	public Course getCourse(String name) {
 		Course retVal = null;
-		String sel = "SELECT * from CourseData.Professor WHERE CourseID = ?";
+		String sel = "SELECT * from CourseData.Course WHERE CourseID = ?";
 		try {
 			PreparedStatement sqlSel = dbConnection.prepareStatement(sel);
 			sqlSel.setString(1, name);
@@ -169,19 +181,95 @@ public class ServerApplication {
 		return retVal;
 	}
 	
+//	public Course(String i, String n, String d, String p, Semester s) {
+//		this.setID(i);
+//		this.setNumber(n);
+//		this.setDescription(d);
+//		this.setPrerequisite(p);
+//		this.setSemester(s);
+//	}
+	
+	public Course getCourseByNum(String num) {
+		Course retVal = null;
+		String sel = "SELECT * from CourseData.Course WHERE CourseNum = ?";
+		try {
+			PreparedStatement sqlSel = dbConnection.prepareStatement(sel);
+			sqlSel.setString(1, num);
+			ResultSet rs = sqlSel.executeQuery();
+			rs.last();
+			int n = rs.getRow();
+			if(n==1) {
+				retVal = new Course(rs.getString("CourseID"), num, rs.getString("Description"),
+						rs.getString("Prerequisite"), null);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
+	}
+	
+	public List<Course> getAllCourses() {
+		ArrayList<Course> retVal = new ArrayList<Course>();
+		String sel = "SELECT CourseNum from CourseData.Course";
+		try {
+			PreparedStatement sqlSel = dbConnection.prepareStatement(sel);
+			ResultSet rs = sqlSel.executeQuery();
+			while(rs.next()) {
+				retVal.add(this.getCourseByNum(rs.getString("CourseNum")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
+	}
+	
 	public List<TeacherAssistant> getAllTAs() {
-		//TODO
+		ArrayList<TeacherAssistant> retVal = new ArrayList<TeacherAssistant>();
+		String selTA = "SELECT * from CourseData.TA";
+		try {
+			PreparedStatement sqlSelTA = dbConnection.prepareStatement(selTA);
+			ResultSet rs = sqlSelTA.executeQuery();
+			while( rs.next() ){
+				retVal.add(new TeacherAssistant(rs.getString("StaffID"), rs.getString("Name"),
+						rs.getInt("AvailNextTerm")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	public List<Professor> getAllProfs() {
-		//TODO
-		return null;
+		ArrayList<Professor> retVal = new ArrayList<Professor>();
+		String selProf = "SELECT * from CourseData.Professor";
+		try {
+			PreparedStatement sqlSelProf = dbConnection.prepareStatement(selProf);
+			ResultSet rs = sqlSelProf.executeQuery();
+			while( rs.next() ) {
+				retVal.add(new Professor(rs.getString("StaffID"), rs.getString("Name"),
+						rs.getInt("AvailNextTerm")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
 	}
 	
 	public List<Student> getAllStudents() {
-		//TODO
-		return null;
+		ArrayList<Student> retVal = new ArrayList<Student>();
+		String selStudent = "SELECT uID from CourseData.Student";
+		try {
+			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
+			ResultSet rs = sqlSelStudent.executeQuery();
+			while(rs.next()) {
+//				retVal.add(new Student(rs.getString("uID"), rs.getString("name"),
+//						rs.getInt("CreditsCompleted"), rs.getInt("CoursesCompleted")));
+				retVal.add(this.getStudent(rs.getString("uID")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
 	}
 	
 	/**
