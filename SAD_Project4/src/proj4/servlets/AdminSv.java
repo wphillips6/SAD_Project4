@@ -47,6 +47,10 @@ public class AdminSv extends HttpServlet {
 	}
 	
 	/**
+	 * This is where Admin page forms get POST'ed to.  This method determines which
+	 * form was submitted, extracts the parameters and calls the appropriate function
+	 * on the backend to make things happen.
+	 * 
 	* @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	*/
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 

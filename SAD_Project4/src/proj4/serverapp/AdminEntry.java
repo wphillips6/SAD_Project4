@@ -275,6 +275,13 @@ public class AdminEntry {
 		System.out.println("AE: adding TA " + name);
 	}
 	
+	/**
+	 * Updates a TA's availability for next term.
+	 * 
+	 * @param taID				The TA to modify passed by id
+	 * @param isAvailNextTerm	0 - TA is not available next term
+	 * 							1 - TA is available
+	 */
 	public void updateTAAvailable(String taID, int isAvailNextTerm) {
 		String insStmt = "UPDATE CourseData.TA SET `AvailNextTerm` = ? WHERE StaffID = ?";
 		try {
@@ -287,6 +294,13 @@ public class AdminEntry {
 		}
 	}
 
+	/**
+	 * Updates a Prof's availability for next term.
+	 * 
+	 * @param taID				The Prof to modify passed by id
+	 * @param isAvailNextTerm	0 - Prof is not available next term
+	 * 							1 - Prof is available
+	 */
 	public void updateProfAvailable(String profID, int isAvailNextTerm) {
 		String insStmt = "UPDATE CourseData.Professor SET `AvailNextTerm` = ? WHERE StaffID = ?";
 		try {
@@ -299,6 +313,13 @@ public class AdminEntry {
 		}
 	}
 	
+	/**
+	 * Updates a TA's competencies.  This is a string of numbers passed in and is directly
+	 * stored in the database as it is passed in.
+	 * 
+	 * @param taID	The ID of the TA to modify
+	 * @param comp	The string to store in the database
+	 */
 	public void updateTACompetencies(String taID, String comp) {
 		String insStmt = "UPDATE CourseData.Professor SET `TACompetencies` = ? WHERE StaffID = ?";
 		try {

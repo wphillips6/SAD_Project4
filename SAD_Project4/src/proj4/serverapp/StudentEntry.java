@@ -34,7 +34,12 @@ public class StudentEntry {
   public void getDesiredCourses(String studentID) {
   }
 
-  public void setDesiredCourses(String studentID, String prefs) {
+  /**
+   * Updates a Student's preferences in the database.
+ * @param studentID		The Student to modify
+ * @param prefs			String of numbers that correspond to ordered list of preferences ie. 1,5,13,11
+ */
+public void setDesiredCourses(String studentID, String prefs) {
 		Student retVal = null;
 		String insStmt = "UPDATE CourseData.Student SET `Desired Courses` = ? WHERE uID = ?";
 		try {
@@ -47,7 +52,13 @@ public class StudentEntry {
 		}
   }
   
-  public void setNumDesiredCourses(String studentID, int num) {
+  /**
+   * Updates a Students desired number of courses for next term
+   * 
+ * @param studentID		The student to modify
+ * @param num			Number of classes this student is wanting to take
+ */
+public void setNumDesiredCourses(String studentID, int num) {
 		Student retVal = null;
 		String insStmt = "UPDATE CourseData.Student SET `NumCoursesDesired` = ? WHERE uID = ?";
 		try {
