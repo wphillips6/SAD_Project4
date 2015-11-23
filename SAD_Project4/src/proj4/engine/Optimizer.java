@@ -6,10 +6,11 @@ import java.util.List;
 import proj4.common.Course;
 import proj4.common.CourseCatalog;
 import proj4.common.Professor;
+import proj4.common.Recommendation;
 import proj4.common.Student;
 import proj4.common.TeacherAssistant;
-import proj4.common.Semester.SemesterTerm;
 import gurobi.GRB;
+import gurobi.GRB.DoubleAttr;
 import gurobi.GRBConstr;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
@@ -27,15 +28,11 @@ public class Optimizer {
 	Integer[][] aProfessor;
 	// The TA Matrix
 	Integer[][] aTA;
-	// The Course Matrix
-	Integer[][] aCourse;
-	// The Prerequisite Matrix
-	Integer[][] aPrereq;
 	
 	private CourseCatalog cCatalog = new CourseCatalog();
     private List<Student> students = new ArrayList<Student>();
     private List<Professor> professors = new ArrayList<Professor>();
-    private List<TeacherAssistant> tas = new ArrayList<TeacherAssistant>();
+    private List<TeacherAssistant> teacherAssistants = new ArrayList<TeacherAssistant>();
 
 	public Optimizer() {
 		
@@ -45,7 +42,7 @@ public class Optimizer {
 		cCatalog = cc;
 		students = s;
 		professors = p;
-		tas = t;
+		teacherAssistants = t;
 
 		// Fill up the Student Matrix
 		aStudent = ConvertToStudentMatrix();
@@ -55,10 +52,6 @@ public class Optimizer {
 		aProfessor = ConvertToProfessorMatrix();
 		// Fill up the TA Matrix
 		aTA = ConvertToTAMatrix();
-		// Fill up the Course Matrix
-		aCourse = ConvertToCourseMatrix();
-		// Fill up the Prerequisite Matrix
-		aPrereq = ConvertToPrereqMatrix();
 	}
 
 	// Method to convert Student Preferences into the array
@@ -123,14 +116,14 @@ public class Optimizer {
 
 	// Method to convert TA information into the array
 	public Integer[][] ConvertToTAMatrix() {
-		Integer[][] t = new Integer[tas.size()][cCatalog.getCourseCatalogSize()];
-		for (int i = 0; i < tas.size(); i++) {
+		Integer[][] t = new Integer[teacherAssistants.size()][cCatalog.getCourseCatalogSize()];
+		for (int i = 0; i < teacherAssistants.size(); i++) {
 			for (int j = 0; j < t[i].length; j++) {
 				t[i][j] = 0;
 			}
 
 			// Set the desired course to the professor array
-			TeacherAssistant ta = tas.get(i);
+			TeacherAssistant ta = teacherAssistants.get(i);
 			List<Course> comp = ta.getCompetencies();
 			for (int j = 0; j < comp.size(); j++) {
 				Course c = comp.get(j);
@@ -138,51 +131,6 @@ public class Optimizer {
 			}
 		}
 		return t;
-	}
-
-	// Method to convert course information into the array
-	public Integer[][] ConvertToCourseMatrix() {
-		Integer[][] Ac = new Integer[cCatalog.getCourseCatalogSize()][3];
-		List<Course> availableCourses = cCatalog.getCourses();
-
-		// Set the course information to the course array
-		for (int i = 0; i < availableCourses.size(); i++) {
-			Course c = availableCourses.get(i);
-			if (c.getSemester().getTerm().equals(SemesterTerm.EVERY)) { // Every - 1,1,1
-				for (int j = 0; j < 3; j++) {
-					Ac[i][j] = 1;
-				}
-			} else if (c.getSemester().getTerm().equals(SemesterTerm.SPRING)) { // Spring - 1,0,0
-				Ac[i][0] = 1;
-				Ac[i][1] = 0;
-				Ac[i][2] = 0;
-			} else if (c.getSemester().getTerm().equals(SemesterTerm.FALL)) { // Fall - 0,0,1
-				Ac[i][0] = 0;
-				Ac[i][1] = 0;
-				Ac[i][2] = 1;
-			}
-		}
-		return Ac;
-	}
-
-	// Method to convert prerequisite information into the array
-	public Integer[][] ConvertToPrereqMatrix() {
-		Integer[][] Ap = new Integer[cCatalog.getCourseCatalogSize()][cCatalog
-				.getCourseCatalogSize()];
-		List<Course> availableCourses = cCatalog.getCourses();
-
-		// Set the prerequisite course to the prerequisite array
-		for (int i = 0; i < availableCourses.size(); i++) {
-			for (int j = 0; j < Ap.length; j++) {
-				Ap[i][j] = 0;
-			}
-
-			Course c = availableCourses.get(i);
-			if (Integer.parseInt(c.getPrerequisite()) != -1) {
-				Ap[i][Integer.parseInt(c.getPrerequisite()) - 1] = 1;
-			}
-		}
-		return Ap;
 	}
 
 	//Calculate the optimal schedule for student
@@ -193,17 +141,15 @@ public class Optimizer {
 			env = new GRBEnv("mip1.log");
 			GRBModel model = new GRBModel(env);
 			
-			int nStudents = aStudent.length;			//600
+			int nStudents = aStudent.length;
 			int nProfessors = aProfessor.length;
 			int nTAs = aTA.length;
-			int nCourses = aCourse.length;				//18
+			int nCourses = cCatalog.getCourseCatalogSize();
 			
 			// Hard code Constraints
 			int maxProfessorCourses = 2; 				// change to 1 or 2
             int maxTACourses = 2; 						// change to 1 or 2
 			
-			//double nVariables = nStudents * nCourses * nSemesters;
-			//GRBVar x = model.addVar(0.0, nVariables, 0.0, GRB.INTEGER, "X");
 			GRBVar x = model.addVar(0.0, GRB.INFINITY, 0.0, GRB.INTEGER, "X");
 			
             // Create Student History variables for [student][course]
@@ -360,7 +306,6 @@ public class Optimizer {
             
 			// Set the objective as the sum of all student-courses
 			GRBLinExpr obj = new GRBLinExpr();
-			//obj.addTerm(1.0, x);
 			for (int i = 0; i < nStudents; i++) {
 				for (int j = 0; j < nCourses; j++) {
 					obj.addTerm(1.0, studentVar[i][j]);
@@ -394,10 +339,54 @@ public class Optimizer {
                     }
                 }
             }
-
-			// Display our results
-			double objectiveValue = model.get(GRB.DoubleAttr.ObjVal);            
-			System.out.printf( "Ojective value = %f\n", objectiveValue );
+            
+            List<Recommendation> recommendations  = new ArrayList<Recommendation>();
+            for (int j = 0; j < nCourses; j++) {
+                Recommendation rec = null;
+                for (int i = 0; i < nStudents; i++) {
+                    if (studentVar[i][j].get(DoubleAttr.X) == 1) {
+                        if (rec == null) {
+                        	rec = new Recommendation(cCatalog.getCourse(j));
+                        }
+                        Student stud = students.get(i);
+                        rec.enrollStudent(stud);
+                    }
+                }
+                if (rec != null) {
+                    for (int i = 0; i < nProfessors; i++) {
+                        if (professorVar[i][j].get(DoubleAttr.X) == 1) {
+                        	Professor prof = professors.get(i);
+                        	rec.setProfessor(prof);
+                            break;
+                        }
+                    }
+                    List<TeacherAssistant> tas = new ArrayList<TeacherAssistant>();
+                    for (int i = 0; i < nTAs; i++) {
+                        if (taVariables[i][j].get(DoubleAttr.X) == 1) {
+                        	TeacherAssistant ta = teacherAssistants.get(i); 
+                            tas.add(ta);
+                        }
+                    }
+                    rec.setTeacherAssistants(tas);
+                    recommendations.add(rec);
+                }
+            }
+            
+            for (Recommendation rec : recommendations) {
+            	System.out.printf("Course " + rec.getCourse().getID() + " " + rec.getCourse().getDescription() 
+            			+ " with professor " + rec.getProfessor().getName() + " with TA ");
+                for (TeacherAssistant ta : rec.getTeacherAssistants()) {
+                	System.out.printf(ta.getName() + " ");
+                }
+                System.out.printf("\nStudents:");
+                for (Student student : rec.getStudents()) {
+                	System.out.printf("\t" + student.getName());
+                }
+                System.out.printf("\n\n");
+            }
+            
+            model.dispose();
+            env.dispose();
 			
 		} catch (GRBException e) {
 			e.printStackTrace();
