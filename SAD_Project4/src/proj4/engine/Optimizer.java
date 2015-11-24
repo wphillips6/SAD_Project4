@@ -9,6 +9,7 @@ import proj4.common.Professor;
 import proj4.common.Recommendation;
 import proj4.common.Student;
 import proj4.common.TeacherAssistant;
+
 import gurobi.GRB;
 import gurobi.GRB.DoubleAttr;
 import gurobi.GRBConstr;
@@ -188,17 +189,6 @@ public class Optimizer {
 			model.update();
 						
 			// *** Course Constraints ***
-			
-            // TA Course Competences Constraint - All non-competent course are not assigned
-			for (int i = 0; i < nTAs; i++) {
-				GRBLinExpr expr = new GRBLinExpr();
-				for (int j = 0; j < nCourses; j++) {
-					if (aTA[i][j] == 0) {
-						expr.addTerm(1.0, taVariables[i][j]);
-					}
-					model.addConstr(expr, GRB.EQUAL, 0, "ta" + (i + 1) + "_Competencies");
-				}
-			}
 						
 			// Capacity Limit Constraint
 			for (int j = 0; j < nCourses; j++) {
