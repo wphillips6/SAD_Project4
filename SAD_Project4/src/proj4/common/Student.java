@@ -1,5 +1,6 @@
 package proj4.common;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
@@ -39,6 +40,15 @@ public class Student {
     
     public List<Course> getDesiredCourses() {
         return desiredCourses;
+    }
+    
+    public List<Course> getDesiredCourses(int num) {
+    	List<Course> temp = new ArrayList<Course>(num);
+    	for (int i = 0; i < num; i++)
+    	{
+    		temp.add(desiredCourses.get(i));
+    	}
+        return temp;
     }
 
     public void setDesiredCourses(List<Course> dc) {

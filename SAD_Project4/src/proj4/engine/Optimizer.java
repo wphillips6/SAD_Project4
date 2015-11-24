@@ -65,7 +65,7 @@ public class Optimizer {
 
 			// Set the desired course to the student array
 			Student stud = students.get(i);
-			List<Course> desiredCourses = stud.getDesiredCourses();
+			List<Course> desiredCourses = stud.getDesiredCourses(Integer.parseInt(stud.getNumCourses()));
 			for (int j = 0; j < desiredCourses.size(); j++) {
 				Course c = desiredCourses.get(j);
 				As[i][Integer.parseInt(c.getNum()) - 1] = 1;
@@ -188,6 +188,17 @@ public class Optimizer {
 			model.update();
 						
 			// *** Course Constraints ***
+			
+            // TA Course Competences Constraint - All non-competent course are not assigned
+			for (int i = 0; i < nTAs; i++) {
+				GRBLinExpr expr = new GRBLinExpr();
+				for (int j = 0; j < nCourses; j++) {
+					if (aTA[i][j] == 0) {
+						expr.addTerm(1.0, taVariables[i][j]);
+					}
+					model.addConstr(expr, GRB.EQUAL, 0, "ta" + (i + 1) + "_Competencies");
+				}
+			}
 						
 			// Capacity Limit Constraint
 			for (int j = 0; j < nCourses; j++) {
@@ -221,48 +232,19 @@ public class Optimizer {
             }
             
             // Course needs 1 student Constraint
-            for (int j = 0; j < cCatalog.getCourseCatalogSize(); j++) {
+            for (int j = 0; j < nCourses; j++) {
                 GRBLinExpr expr = new GRBLinExpr();
 				for (int i = 0; i < nStudents; i++) {
 					expr.addTerm(1.0, studentVar[i][j]);
 				}
-				model.addConstr(expr, GRB.GREATER_EQUAL, 1.0, "NeedOneStudent_course_" + (j));
+				model.addConstr(expr, GRB.GREATER_EQUAL, 1.0, "NeedOneStudent_course_" + (j + 1));
             }
             
             // Student Specialization Constraint - May decide to skip
             
             // *** Faculty Constraint ***
             
-            // 1 Professor per Course Constraint
-			for (int j = 0; j < nCourses; j++) {
-				GRBLinExpr expr = new GRBLinExpr();
-				for (int i = 0; i < nProfessors; i++) {
-					expr.addTerm(1.0, professorVar[i][j]);
-				}
-
-				for (int i = 0; i < nStudents; i++) {
-					expr.addTerm(-1.0, studentVar[i][j]);
-				}
-				model.addConstr(expr, GRB.GREATER_EQUAL, 0, "One_prof_offered_course_" + (j + 1));
-			}
-
-            // 1 TA per Course Constraint
-			for (int j = 0; j < nCourses; j++) {
-				Course course = cCatalog.getCourse(j);
-				int maxCapacity = Integer.parseInt(course.getLimit());
-				GRBLinExpr expr = new GRBLinExpr();
-				for (int i = 0; i < nTAs; i++) {
-					expr.addTerm(maxCapacity, taVariables[i][j]);
-				}
-
-				for (int i = 0; i < nStudents; i++) {
-					expr.addTerm(-1.0, studentVar[i][j]);
-				}
-				model.addConstr(expr, GRB.LESS_EQUAL, maxCapacity - 1, "Max_one_ta_course_" + (j + 1));
-				model.addConstr(expr, GRB.GREATER_EQUAL, 0, "One_ta_offered_course_" + (j + 1));
-			}
-                       
-            // 1 course per Professor and TA Constraint
+            // Max courses per professor and TA Constraint
 			for (int i = 0; i < nProfessors; i++) {
 				GRBLinExpr professorExpr = new GRBLinExpr();
 				for (int j = 0; j < nCourses; j++) {
@@ -273,36 +255,62 @@ public class Optimizer {
 			for (int i = 0; i < nTAs; i++) {
 				GRBLinExpr taExpr = new GRBLinExpr();
 				for (int j = 0; j < nCourses; j++) {
-					taExpr.addTerm(1, taVariables[i][j]);
+					taExpr.addTerm(1.0, taVariables[i][j]);
 				}
 				model.addConstr(taExpr, GRB.LESS_EQUAL, maxTACourses, "One_ta" + (i + 1));
 			}
             
+            // Each course has 1 Professor Constraint
+			for (int j = 0; j < nCourses; j++) {
+				int maxCourseCapacity = Integer.parseInt(cCatalog.getCourse(j).getLimit());
+				GRBLinExpr expr = new GRBLinExpr();
+				for (int i = 0; i < nProfessors; i++) {
+					expr.addTerm(maxCourseCapacity, professorVar[i][j]);
+				}
+
+				for (int i = 0; i < nStudents; i++) {
+					expr.addTerm(-1.0, studentVar[i][j]);
+				}
+                model.addConstr(expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "OneProfessorIfOffering_Course_" + (j + 1) + "_atMost");
+                model.addConstr(expr, GRB.GREATER_EQUAL, 0, "OneProfessorIfOffering_course_" + (j + 1) + "atLeast");
+			}
+
+            // Each course has 1 TA Constraint
+			for (int j = 0; j < nCourses; j++) {
+				int maxCourseCapacity = Integer.parseInt(cCatalog.getCourse(j).getLimit());
+				GRBLinExpr expr = new GRBLinExpr();
+				for (int i = 0; i < nTAs; i++) {
+					expr.addTerm(maxCourseCapacity, taVariables[i][j]);
+				}
+
+				for (int i = 0; i < nStudents; i++) {
+					expr.addTerm(-1.0, studentVar[i][j]);
+				}
+                model.addConstr(expr, GRB.LESS_EQUAL, maxCourseCapacity - 1, "OneTAIfOffering_Course_" + (j + 1) + "_atMost");
+                model.addConstr(expr, GRB.GREATER_EQUAL, 0, "OneTAIfOffering_course_" + (j + 1) + "atLeast");
+			}
+            
             // Professor Course Competences Constraint - All non-competent course are not assigned
-            for (int i = 0; i < nProfessors; i++) {
-                if ( aProfessor.length > 0 && aProfessor[i].length > 0 ) {
-					GRBLinExpr expr = new GRBLinExpr();
-					for (int j = 0; j < nCourses; j++) {
-						if (aProfessor[i][j] == 0) {
-							expr.addTerm(1.0, professorVar[i][j]);
-						}
+			for (int i = 0; i < nProfessors; i++) {
+				GRBLinExpr expr = new GRBLinExpr();
+				for (int j = 0; j < nCourses; j++) {
+					if (aProfessor[i][j] == 0) {
+						expr.addTerm(1.0, professorVar[i][j]);
 					}
-					model.addConstr(expr, GRB.EQUAL, 0, "professor" + (i + 1) + "_Competencies");
-                }
-            }
+				}
+				model.addConstr(expr, GRB.EQUAL, 0, "professor" + (i + 1) + "_Competencies");
+			}
             
             // TA Course Competences Constraint - All non-competent course are not assigned
-            for (int i = 0; i < nTAs; i++) {
-                if (aTA.length > 0 && aTA[i].length > 0) {
-					GRBLinExpr expr = new GRBLinExpr();
-					for (int j = 0; j < nCourses; j++) {
-						if (aTA[i][j] == 0) {
-							expr.addTerm(1.0, taVariables[i][j]);
-						}
-						model.addConstr(expr, GRB.EQUAL, 0, "ta" + (i + 1)	+ "_Competencies");
-                    }
-                }
-            }
+			for (int i = 0; i < nTAs; i++) {
+				GRBLinExpr expr = new GRBLinExpr();
+				for (int j = 0; j < nCourses; j++) {
+					if (aTA[i][j] == 0) {
+						expr.addTerm(1.0, taVariables[i][j]);
+					}
+					model.addConstr(expr, GRB.EQUAL, 0, "ta" + (i + 1) + "_Competencies");
+				}
+			}
             
 			// Set the objective as the sum of all student-courses
 			GRBLinExpr obj = new GRBLinExpr();

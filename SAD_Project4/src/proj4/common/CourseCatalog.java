@@ -1,5 +1,6 @@
 package proj4.common;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseCatalog {
@@ -7,6 +8,10 @@ public class CourseCatalog {
 	private List<Course> availableCourses;
 	
 	public CourseCatalog() {
+	}
+	
+	public CourseCatalog(int i) {
+		availableCourses = new ArrayList<Course>(i);
 	}
 	
 	public List<Course> getCourses() {

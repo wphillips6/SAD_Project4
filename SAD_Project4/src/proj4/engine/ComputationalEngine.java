@@ -21,8 +21,8 @@ public class ComputationalEngine {
 	String professorFileName = "/home/ubuntu/Documents/Project 4/Professor.csv";
 	String taFileName = "/home/ubuntu/Documents/Project 4/TA.csv";
 	
-	private CourseCatalog cCatalog = new CourseCatalog();
-    private List<Student> students = new ArrayList<Student>();
+	private CourseCatalog cCatalog; //= new CourseCatalog();
+    private List<Student> students; //= new ArrayList<Student>();
     private List<Professor> professors = new ArrayList<Professor>();
     private List<TeacherAssistant> tas = new ArrayList<TeacherAssistant>();
     
@@ -85,7 +85,12 @@ public class ComputationalEngine {
 				}
 			}
 			// close the file
-			cCatalog.setCourses(courseList);
+			cCatalog = new CourseCatalog(courseList.size());
+			for (int i = 0; i < courseList.size(); i++)
+			{
+				cCatalog.setCourse(courseList.get(i));
+			}
+			//cCatalog.setCourses(courseList);
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
 			System.out.println("Unable to open file '" + courseFileName + "'");
@@ -107,6 +112,7 @@ public class ComputationalEngine {
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			// Read the lines
+			List<Student> studentList = new ArrayList<Student>();
 			while ((line = bufferedReader.readLine()) != null) {
 				if ( line != null && !line.isEmpty()) { // Skip the lines with comment and empty lines
 					String[] info = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
@@ -120,7 +126,7 @@ public class ComputationalEngine {
 					String tempDCourse = info[6].replace("\"", "");
 					String[] dCourses = tempDCourse.split(",");
 					List<Course> desiredCourses = new ArrayList<Course>(dCourses.length);
-					for (int j = 1; j < dCourses.length; j++)
+					for (int j = 0; j < dCourses.length; j++)
 					{
 						Course c = cCatalog.getCourseByNum(dCourses[j]);
 						desiredCourses.add(c);
@@ -138,10 +144,15 @@ public class ComputationalEngine {
 					}
 					stud.setCompletedCourses(completeCourses);
 					
-					students.add(stud);
+					studentList.add(stud);
 				}
 			}
 			// close the file
+			students = new ArrayList<Student>(studentList.size());
+			for (int i = 0; i < studentList.size(); i++)
+			{
+				students.add(studentList.get(i));
+			}
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
 			System.out.println("Unable to open file '" + studentFileName + "'");
