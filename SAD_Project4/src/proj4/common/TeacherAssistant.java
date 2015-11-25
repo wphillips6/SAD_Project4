@@ -1,22 +1,14 @@
 package proj4.common;
 
 import java.util.List;
-import java.util.Vector;
 
 public class TeacherAssistant {
 
 	private String name;
 	private String taID;
 	private int availNextTerm;
-	private  List<Course> courses;
 	private  List<Course> teachableCourses;
 	private String strComp;
-
-	/**
-	 * 
-	 * @element-type Course
-	 */
-	public Vector myCourse;
 
 	public TeacherAssistant() {
 		this.taID = "";
@@ -53,21 +45,15 @@ public class TeacherAssistant {
 	}
 
 	public void setName(String n) {
-		this.name = name;
-	}
-
-	public void getCourses() {
-	}
-
-	public void setCourses(List<Course> courses) {
+		this.name = n;
 	}
 
 	public List<Course> getTeachableCourses() {
-
-		return null;
+		return teachableCourses;
 	}
 
-	public void setTeachableCourses(List<Course> courses) {
+	public void setTeachableCourses(List<Course> c) {
+		this.teachableCourses = c;
 	}
 
 	public String getTaID() {
