@@ -15,12 +15,7 @@ import proj4.common.Professor;
 import proj4.common.TeacherAssistant;
 
 public class ComputationalEngine {
-	
-	String courseFileName = "/home/ubuntu/Documents/Project 4/Course.csv";
-	String studentFileName = "/home/ubuntu/Documents/Project 4/Student.csv";
-	String professorFileName = "/home/ubuntu/Documents/Project 4/Professor.csv";
-	String taFileName = "/home/ubuntu/Documents/Project 4/TA.csv";
-	
+
 	private CourseCatalog cCatalog; //= new CourseCatalog();
     private List<Student> students; //= new ArrayList<Student>();
     private List<Professor> professors = new ArrayList<Professor>();
@@ -30,16 +25,23 @@ public class ComputationalEngine {
 	public ComputationalEngine() {
 		
 	}
+	
+	public ComputationalEngine(CourseCatalog cc, List<Student> s, List<Professor> p, List<TeacherAssistant> t) {
+		cCatalog = cc;
+		students = s;
+		professors = p;
+		tas = t;
+	}
     
-    // Main processing method
+	// Main processing method - without reading CSVs
 	public void CalculateSchedule() {
-		
-		boolean readCourseFileName = ReadCourseCSVFile();
-		boolean readStudentFile = ReadStudentCSVFile();
-		boolean readProfessorFile = ReadProfessorCSVFile();
-		boolean readTAFile = ReadTACSVFile();
-		
-		if (readStudentFile && readCourseFileName && readProfessorFile && readTAFile) {
+		Optimizer op = new Optimizer(cCatalog, students, professors, tas);
+		op.Calculate();
+	}
+	
+    // Main processing method - with reading CSVs
+	public void CalculateSchedule(String courseFileName, String studentFileName, String professorFileName, String taFileName) {
+		if (ReadCourseCSVFile(courseFileName) && ReadStudentCSVFile(studentFileName) && ReadProfessorCSVFile(professorFileName) && ReadTACSVFile(taFileName)) {
 			Optimizer op = new Optimizer(cCatalog, students, professors, tas);
 			op.Calculate();
 		}
@@ -48,13 +50,13 @@ public class ComputationalEngine {
 		}
 	}
 	
-	public boolean ReadCourseCSVFile() {
+	public boolean ReadCourseCSVFile(String fileName) {
 
 		String line = null;
 
 		try {
 			// Read text files
-			FileReader fileReader = new FileReader(courseFileName);
+			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			List<Course> courseList = new ArrayList<Course>();
@@ -93,22 +95,22 @@ public class ComputationalEngine {
 			//cCatalog.setCourses(courseList);
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + courseFileName + "'");
+			System.out.println("Unable to open file '" + fileName + "'");
 			return false;
 		} catch (IOException ex) {
-			System.out.println("Error reading file '" + courseFileName + "'");
+			System.out.println("Error reading file '" + fileName + "'");
 			return false;
 		}
 		return true;
 	}
 	
-	public boolean ReadStudentCSVFile() {
+	public boolean ReadStudentCSVFile(String fileName) {
 
 		String line = null;
 
 		try {
 			// Read text files
-			FileReader fileReader = new FileReader(studentFileName);
+			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			
 			// Read the lines
@@ -155,22 +157,22 @@ public class ComputationalEngine {
 			}
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + studentFileName + "'");
+			System.out.println("Unable to open file '" + fileName + "'");
 			return false;
 		} catch (IOException ex) {
-			System.out.println("Error reading file '" + studentFileName + "'");
+			System.out.println("Error reading file '" + fileName + "'");
 			return false;
 		}
 		return true;
 	}
 	
-	public boolean ReadProfessorCSVFile() {
+	public boolean ReadProfessorCSVFile(String fileName) {
 
 		String line = null;
 
 		try {
 			// Read text files
-			FileReader fileReader = new FileReader(professorFileName);
+			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			// Read the lines
@@ -198,22 +200,22 @@ public class ComputationalEngine {
 			// close the file
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + professorFileName + "'");
+			System.out.println("Unable to open file '" + fileName + "'");
 			return false;
 		} catch (IOException ex) {
-			System.out.println("Error reading file '" + professorFileName + "'");
+			System.out.println("Error reading file '" + fileName + "'");
 			return false;
 		}
 		return true;
 	}
 	
-	public boolean ReadTACSVFile() {
+	public boolean ReadTACSVFile(String fileName) {
 	
 		String line = null;
 
 		try {
 			// Read text files
-			FileReader fileReader = new FileReader(professorFileName);
+			FileReader fileReader = new FileReader(fileName);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			// Read the lines
@@ -241,10 +243,10 @@ public class ComputationalEngine {
 			// close the file
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + studentFileName + "'");
+			System.out.println("Unable to open file '" + fileName + "'");
 			return false;
 		} catch (IOException ex) {
-			System.out.println("Error reading file '" + studentFileName + "'");
+			System.out.println("Error reading file '" + fileName + "'");
 			return false;
 		}
 		return true;
