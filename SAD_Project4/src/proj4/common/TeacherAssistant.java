@@ -1,43 +1,62 @@
 package proj4.common;
 
 import java.util.List;
-import java.util.Vector;
 
 public class TeacherAssistant {
 
-	public String name;
+	private String name;
+	private String taID;
+	private int availNextTerm;
+	private  List<Course> teachableCourses;
+	private String strComp;
 
-	public List<Course> courses;
-
-	public List<Course> teachableCourses;
-
-	/**
-	 * 
-	 * @element-type Course
-	 */
-	public Vector myCourse;
-
-	public void TeacherAssistant() {
+	public TeacherAssistant() {
+		this.taID = "";
+		this.name = "";
+		this.availNextTerm = 0;
+		this.strComp = "";
+	}
+	
+	public TeacherAssistant(String id, String name, int availNextTerm) {
+		this.taID = id;
+		this.name = name;
+		this.availNextTerm = availNextTerm;
+		this.strComp = "";
+	}
+	
+	public int getAvailNextTerm() {
+		return availNextTerm;
 	}
 
-	public void getName() {
+	public void setAvailNextTerm(int availNextTerm) {
+		this.availNextTerm = availNextTerm;
+	}
+
+	public String getStrComp() {
+		return strComp;
+	}
+
+	public void setStrComp(String strComp) {
+		this.strComp = strComp;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public void setName(String n) {
-	}
-
-	public void getCourses() {
-	}
-
-	public void setCourses(List<Course> courses) {
+		this.name = n;
 	}
 
 	public List<Course> getTeachableCourses() {
-
-		return null;
+		return teachableCourses;
 	}
 
-	public void setTeachableCourses(List<Course> courses) {
+	public void setTeachableCourses(List<Course> c) {
+		this.teachableCourses = c;
 	}
 
+	public String getTaID() {
+		return taID;
+	}
 }

@@ -1,23 +1,43 @@
 package proj4.common;
 
-public class Course {
+public class Course implements Comparable {
 	private String id;
-	private String name;
+	private String number;
 	private String description;
 	private String prerequisite;
 	private Semester semester;
+	private int enrollment;
 
 	public Course() {
 	}
 
 	public Course(String i, String n, String d, String p, Semester s) {
 		this.setID(i);
-		this.setName(n);
+		this.setNumber(n);
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
+		this.enrollment = 0;
 	}
 
+	public int getEnrollLim() {
+		return enrollment;
+	}
+
+	public void setEnrollLim(int enrollLim) {
+		this.enrollment = enrollLim;
+	}
+
+
+	public Course(String i, String n, String d, String p, Semester s, int enroll) {
+		this.setID(i);
+		this.setNumber(n);
+		this.setDescription(d);
+		this.setPrerequisite(p);
+		this.setSemester(s);
+		this.setEnrollLim(enroll);
+	}
+	
 	public String getID() {
 		return id;
 	}
@@ -26,12 +46,12 @@ public class Course {
 		this.id = i;
 	}
 
-	public String getName() {
-		return name;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setName(String n) {
-		this.name = n;
+	public void setNumber(String n) {
+		this.number = n;
 	}
 
 	public String getDescription() {
@@ -57,4 +77,17 @@ public class Course {
 	public void setSemester(Semester s) {
 		this.semester = s;
 	}
+
+	@Override
+	public int compareTo(Object c) {
+		System.out.println("Comparing "+this.getID()+" with "+((Course)c).getID());
+		return ((Course)c).getNumber().compareTo(this.getNumber());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		//System.out.println("Comparing "+this.getID()+" with "+((Course)obj).getID()+" "+this.getID().equals(((Course)obj).getID()));
+		return this.getID().equals(((Course)obj).getID());
+	}
+
 }
