@@ -357,15 +357,25 @@ public class ServerApplication {
 	}
 
 	public void updateCourse(Course c, boolean shadow, Semester s) {
-		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? WHERE CourseNum = ?";
+		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? AND `SemesterOffered` = ? WHERE CourseNum = ?";
 		try {
 			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
 			insPrepStmt.setInt(1, c.getEnrollLim());
-			insPrepStmt.setString(2, c.getNumber());
+			insPrepStmt.setString(2, s.getTermDesc());
+			insPrepStmt.setString(3, c.getNumber());
 			insPrepStmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public void addCourse(Course c, boolean shadow, Semester s){
+		
+	}
+	
+	public void removeCourse(Course c, boolean shadow ){
+		
 		
 	}
 

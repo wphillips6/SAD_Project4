@@ -150,7 +150,7 @@ public class AdminEntry {
 	}
 	
 	/**
-	 * Method addCourse removes a course from the course catalog. if there is no
+	 * Method removeCourse removes a course from the course catalog. if there is no
 	 *                  course identifiable by the entered desc an error is
 	 *                  returned
 	 *                  already exists an error message is returned

@@ -31,6 +31,21 @@ public class Semester {
         return id;
     }
     
+    public String getTermDesc(){
+    	switch (this.term){
+    	case EVERY:
+    		return "EVERY";
+    	case FALL:
+    		return "FALL";
+    	case SPRING:
+    		return "SPRING";
+    	case SUMMER:
+    		return "SUMMER";
+    	default:
+    	    return "EVERY";
+    	}
+    }
+    
     public void setTerm( SemesterTerm term) {
         this.term = term;
     }
