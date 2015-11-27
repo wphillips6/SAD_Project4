@@ -89,9 +89,8 @@ public class Login extends HttpServlet {
 	    	session.setAttribute("srvapp", sa);
 	    	response.sendRedirect("admin.jsp");
 	    } else {
-	    	out.println("<h1>" + "Bad username and/or password" + "</h1>");
+	    	response.sendRedirect("loginerror.jsp");
 	    }
 	    //TODO:  Add logging here
 	}
-
 }

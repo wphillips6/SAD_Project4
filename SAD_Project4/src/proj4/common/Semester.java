@@ -34,5 +34,15 @@ public class Semester {
     public void setTerm( SemesterTerm term) {
         this.term = term;
     }
+    
+    public void setTerm(String s) {
+		if (s != null) {
+			for (SemesterTerm t : SemesterTerm.values()) {
+				if (s.equalsIgnoreCase(t.toString())) {
+					this.term = t;
+				}
+			}
+		}
+	}
 
 }

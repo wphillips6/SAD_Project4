@@ -1,28 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
-<title>My Title</title>
+<title>Project 4</title>
 </head>
 <body>
 	<div class="content">
 		<div class="content">
-			<h1>homepage!</h1>
+			<h1>Welcome to the Dynamic Student-Course Assignment for CS6310 Fall 2015</h1>
 		</div>
 
 		<nav>
 		<ul>
-			<li><a href="http://www.google.com">Google</a></li>
-			<li><a href="http://www.yahoo.com">Yahoo</a></li>
+			<li><a href="http://www.gatech.edu/">GATech</a></li>
+			<li><a href="http://www.omscs.gatech.edu/courses/">OMSCS Courses</a></li>
 		</ul>
 		</nav>
 
 		<section>
 		<p>
-			<span>Please log in</span>
+			<span>Please Enter your Username and Password</span>
 		</p>
 
 		<form method="POST" action="Login">
@@ -33,7 +34,7 @@
 				Password:<input name="password" type="password" />
 			</div>
 			<div>
-				<input type="submit" />
+				<button type="submit" >Login</button>
 			</div>
 
 		</form>

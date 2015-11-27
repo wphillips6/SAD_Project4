@@ -1,9 +1,6 @@
 package proj4.common;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import proj4.common.Semester.SemesterTerm;
 
 public class Student {
 	
@@ -12,6 +9,7 @@ public class Student {
 	private int creditsComplete;
 	private int coursesComplete;
 	private List<Course> desiredCourses;
+	private List<Course> completedCourses;
 	private int numDesiredCourses;
 	
 	public Student() {
@@ -21,8 +19,8 @@ public class Student {
     public Student(String uID, String name, int credits, int courses, int numDesiredCourses) {
     	this.uID = uID;
     	this.name = name;
-    	creditsComplete = credits;
-    	coursesComplete = courses;
+    	this.creditsComplete = credits;
+    	this.coursesComplete = courses;
     	this.numDesiredCourses = numDesiredCourses;
     }
     
@@ -34,19 +32,27 @@ public class Student {
     	this.uID = u;
     }
     
-    public List<Course> getDesiredCourses() {
-    	return desiredCourses;
+    public String getName(){
+    	return name;
     }
     
     public int getNumDesiredCourses() {
     	return numDesiredCourses;
     }
+    
+    public List<Course> getDesiredCourses() {
+    	return desiredCourses;
+    }
 
-    public void setDesiredCourses(List<Course> desiredCourses) {
-        this.desiredCourses = desiredCourses;
+    public void setDesiredCourses(List<Course> c) {
+        this.desiredCourses = c;
     }
     
-    public String getName(){
-    	return name;
+    public List<Course> getCompletedCourses() {
+    	return completedCourses;
+    }
+
+    public void setCompletedCourses(List<Course> c) {
+        this.completedCourses = c;
     }
 }
