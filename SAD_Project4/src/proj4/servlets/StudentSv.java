@@ -104,10 +104,11 @@ public class StudentSv extends HttpServlet {
 	    	se.setDesiredCourses(s, newPrefString);
 	    	se.setNumDesiredCourses(s, Integer.parseInt(request.getParameter("numCourses")));
 	    	out.println("<a href=\"student.jsp\">Back</a>");
-	    	session.setAttribute("student", se.getStudent(s));
 	    } else if( f.compareTo("setCourse") == 0) {
 
 	    }
+	    se.CalcAndStoreRecommendations();
+	    session.setAttribute("student", se.getStudent(s));
 	}
 
 }

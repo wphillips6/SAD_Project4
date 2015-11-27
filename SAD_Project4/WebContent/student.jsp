@@ -48,9 +48,10 @@
 		<%
 		Student s = (Student)session.getAttribute("student");
 		List l = s.getDesiredCourses();
+		List lCurrRecs = s.getCurrentRecs();
 		//System.out.println("Studnt List size:  " + l.size());
-		for(int i = 0; i < l.size(); i++){
-			Course c = (Course)l.get(i);
+		for(int i = 0; i < lCurrRecs.size(); i++){
+			Course c = (Course)lCurrRecs.get(i);
 			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
 		}
 		%>

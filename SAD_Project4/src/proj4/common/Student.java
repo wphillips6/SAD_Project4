@@ -10,6 +10,7 @@ public class Student {
 	private int coursesComplete;
 	private List<Course> desiredCourses;
 	private List<Course> completedCourses;
+	private List<Course> currentRecs;
 	private int numDesiredCourses;
 	
 	public Student() {
@@ -22,6 +23,15 @@ public class Student {
     	this.creditsComplete = credits;
     	this.coursesComplete = courses;
     	this.numDesiredCourses = numDesiredCourses;
+    	this.currentRecs = null;
+    }
+    
+    public List<Course> getCurrentRecs() {
+    	return this.currentRecs;
+    }
+    
+    public void setCurrentRecs(List<Course> recs){
+    	this.currentRecs = recs;
     }
     
     public String getUID() {

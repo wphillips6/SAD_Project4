@@ -9,6 +9,7 @@ import java.util.List;
 
 import proj4.common.Course;
 import proj4.common.CourseCatalog;
+import proj4.common.Recommendation;
 import proj4.common.Semester;
 import proj4.common.Student;
 import proj4.common.Professor;
@@ -34,9 +35,9 @@ public class ComputationalEngine {
 	}
     
 	// Main processing method - without reading CSVs
-	public void CalculateSchedule() {
+	public List<Recommendation> CalculateSchedule() {
 		Optimizer op = new Optimizer(cCatalog, students, professors, tas);
-		op.Calculate();
+		return op.Calculate();
 	}
 	
     // Main processing method - with reading CSVs

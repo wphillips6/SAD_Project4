@@ -5,14 +5,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import proj4.common.CourseCatalog;
+import proj4.common.Recommendation;
 import proj4.common.Semester;
 import proj4.common.Student;
 import proj4.common.Professor;
 import proj4.common.Course;
 import proj4.common.TeacherAssistant;
+import proj4.engine.ComputationalEngine;
 
 /**
  * @author ubuntu
@@ -47,6 +51,7 @@ public class ServerApplication {
 		}
 		se = new StudentEntry(this, dbConnection);
 		ae = new AdminEntry(this, dbConnection);
+		//this.CalcAndStoreRecommendations();
 	}
 	
 	public static void main( String[] args) {
@@ -88,7 +93,37 @@ public class ServerApplication {
 					}
 				}
 				retVal.setDesiredCourses(l);
+				
+				l = new ArrayList<Course>();
+				if(!rs.getString("CompletedCourses").equals("")){
+					String[] arrCourses = rs.getString("CompletedCourses").split(",");
+					for(int i = 0; i < arrCourses.length; i++) {
+						l.add(this.getCourseByNum(arrCourses[i]));
+						//System.out.println("Adding "+arrCourses[i]);
+					}
+				}
+				retVal.setCompletedCourses(l);
 				//TODO: Get Recommendation
+				String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
+				PreparedStatement sqlStmt = dbConnection.prepareStatement(topRecNum);
+				ResultSet rsTopRec = sqlStmt.executeQuery();
+				rsTopRec.next();
+				float timestamp = rsTopRec.getFloat("TimeStamp");
+				System.out.println("TOP VALUE:  " + timestamp);
+				rsTopRec.last();
+				n = rsTopRec.getRow();
+				if(n==1) {
+					String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
+					sqlStmt = dbConnection.prepareStatement(selStmt);
+					sqlStmt.setString(1, retVal.getUID());
+					sqlStmt.setFloat(2, timestamp);
+					rsTopRec = sqlStmt.executeQuery();
+					ArrayList<Course> crsRecList = new ArrayList<Course>();
+					while(rsTopRec.next()){
+						crsRecList.add(this.getCourseByNum(rsTopRec.getString("CourseID")));
+					}
+					retVal.setCurrentRecs(crsRecList);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -117,6 +152,16 @@ public class ServerApplication {
 				retVal = new TeacherAssistant(rs.getString("StaffID"), rs.getString("Name"),
 						rs.getInt("AvailNextTerm"));
 				retVal.setStrComp(rs.getString("TACompetencies"));
+				
+				ArrayList<Course> l = new ArrayList<Course>();
+				if(!rs.getString("TACompetencies").equals("")){
+					String[] arrCourses = rs.getString("TACompetencies").split(",");
+					for(int i = 0; i < arrCourses.length; i++) {
+						l.add(this.getCourseByNum(arrCourses[i]));
+						//System.out.println("Adding "+arrCourses[i]);
+					}
+				}
+				retVal.setTeachableCourses(l);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -145,6 +190,16 @@ public class ServerApplication {
 				retVal = new Professor(rs.getString("StaffID"), rs.getString("Name"),
 						rs.getInt("AvailNextTerm"));
 				retVal.setStrComp(rs.getString("ProfCompetencies"));
+				
+				ArrayList<Course> l = new ArrayList<Course>();
+				if(!rs.getString("ProfCompetencies").equals("")){
+					String[] arrCourses = rs.getString("ProfCompetencies").split(",");
+					for(int i = 0; i < arrCourses.length; i++) {
+						l.add(this.getCourseByNum(arrCourses[i]));
+						//System.out.println("Adding "+arrCourses[i]);
+					}
+				}
+				retVal.setCompetencies(l);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -367,6 +422,36 @@ public class ServerApplication {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void CalcAndStoreRecommendations() {
+		try {
+			Statement truncate = dbConnection.createStatement();
+			truncate.executeUpdate("TRUNCATE CourseData.OptimizerRecs");
+			CourseCatalog cc = new CourseCatalog(this);
+			ComputationalEngine ce = new ComputationalEngine(cc, this.getAllStudents(), this.getAllProfs(), this.getAllTAs());
+			List<Recommendation> recs = ce.CalculateSchedule();
+			long mills = System.currentTimeMillis();
+			String insStmt = "INSERT INTO CourseData.OptimizerRecs VALUES(?, ?, ?, ?, ?)";
+		
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			for(int i = 0; i < recs.size(); i++){
+				Recommendation r = recs.get(i);
+				List<Student> stuList = r.getStudents();
+				for(int j = 0; j < stuList.size(); j++){
+					insPrepStmt.setFloat(1, mills);
+					insPrepStmt.setString(2, "");
+					insPrepStmt.setString(3, stuList.get(j).getUID());
+					insPrepStmt.setString(4, r.getCourse().getNumber());
+					insPrepStmt.setInt(5, 0);
+					insPrepStmt.addBatch();
+				}
+				insPrepStmt.executeBatch();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
