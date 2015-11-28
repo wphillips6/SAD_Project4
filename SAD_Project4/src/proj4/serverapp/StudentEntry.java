@@ -96,5 +96,9 @@ public void setNumDesiredCourses(String studentID, int num) {
   public Student getStudent(String studentID) {
 	  return sa.getStudent(studentID);
   }
+  
+  public void CalcAndStoreRecommendations() {
+	  sa.CalcAndStoreRecommendations();
+  }
 
 }

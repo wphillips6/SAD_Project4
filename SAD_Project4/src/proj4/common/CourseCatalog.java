@@ -3,6 +3,8 @@ package proj4.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import proj4.serverapp.ServerApplication;
+
 public class CourseCatalog {
 	
 	private List<Course> availableCourses;
@@ -12,6 +14,11 @@ public class CourseCatalog {
 	
 	public CourseCatalog(int i) {
 		availableCourses = new ArrayList<Course>(i);
+	}
+	
+	public CourseCatalog(ServerApplication sa) {
+		//availableCourses = new ArrayList<Course>();
+		availableCourses = sa.getAllCourses();
 	}
 	
 	public List<Course> getCourses() {
