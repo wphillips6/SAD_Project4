@@ -104,7 +104,7 @@ public class StudentSv extends HttpServlet {
 	    	se.setDesiredCourses(s, newPrefString);
 	    	se.setNumDesiredCourses(s, Integer.parseInt(request.getParameter("numCourses")));
 	    	out.println("<a href=\"student.jsp\">Back</a>");
-	    } else if( f.compareTo("setCourse") == 0) {
+	    } else {
 
 	    }
 	    se.CalcAndStoreRecommendations();
