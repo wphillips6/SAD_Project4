@@ -16,11 +16,8 @@ import proj4.common.Student;
 import proj4.common.Professor;
 import proj4.common.Course;
 import proj4.common.TeacherAssistant;
-<<<<<<< HEAD
 import proj4.common.Administrator;
-=======
 import proj4.engine.ComputationalEngine;
->>>>>>> dev-kiel
 
 /**
  * @author ubuntu
@@ -39,6 +36,7 @@ public class ServerApplication {
 	private StudentEntry se;
 	private AdminEntry ae;
 	private Connection dbConnection;
+	private List<Recommendation> curRecs;
 
 	public ServerApplication() {
 		try {
@@ -448,28 +446,51 @@ public class ServerApplication {
 		
 	}
 	
-<<<<<<< HEAD
 	public void addCourse(Course c, boolean shadow, Semester s){
-		
+		String insStmt = "INSERT INTO CourseData.Course (`CourseNum`, `CourseID`, "
+				       + "`Description`, `CourseLimit`, `Prerequisite`, `Corequisite`, "
+				       + "`SemesterOffered`) Values ( ?, ?, ?, ?, ?, ?, ?) ";
+		try{
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
+			insPrepStmt.setInt(1, Integer.parseInt(c.getNumber()));
+			insPrepStmt.setString(2, c.getID());
+			insPrepStmt.setString(3, c.getDescription());
+			insPrepStmt.setInt(4,c.getEnrollLim());
+			
+			// setting requisites to -1 for now..
+			insPrepStmt.setInt(5, -1);
+			insPrepStmt.setInt(6, -1);
+			insPrepStmt.setString(7, c.getSemester().getTermDesc());
+			insPrepStmt.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void removeCourse(Course c, boolean shadow ){
+		String delStmt = "DELETE FROM CourseData.Course WHERE `CourseNum` = ? AND " +
+						 "`CourseID` = ? AND `Description` = ? ";
+		try{
+			PreparedStatement insPrepStmt = dbConnection.prepareStatement(delStmt);
+			insPrepStmt.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 		
-		
-=======
 	public void CalcAndStoreRecommendations() {
 		try {
 			Statement truncate = dbConnection.createStatement();
 			truncate.executeUpdate("TRUNCATE CourseData.OptimizerRecs");
 			CourseCatalog cc = new CourseCatalog(this);
 			ComputationalEngine ce = new ComputationalEngine(cc, this.getAllStudents(), this.getAllProfs(), this.getAllTAs());
-			List<Recommendation> recs = ce.CalculateSchedule();
+		    curRecs = new ArrayList<Recommendation>(ce.CalculateSchedule());
 			long mills = System.currentTimeMillis();
 			String insStmt = "INSERT INTO CourseData.OptimizerRecs VALUES(?, ?, ?, ?, ?)";
 		
 			PreparedStatement insPrepStmt = dbConnection.prepareStatement(insStmt);
-			for(int i = 0; i < recs.size(); i++){
-				Recommendation r = recs.get(i);
+			for(int i = 0; i < curRecs.size(); i++){
+				Recommendation r = curRecs.get(i);
 				List<Student> stuList = r.getStudents();
 				for(int j = 0; j < stuList.size(); j++){
 					insPrepStmt.setFloat(1, mills);
@@ -485,7 +506,12 @@ public class ServerApplication {
 			e.printStackTrace();
 		}
 
->>>>>>> dev-kiel
 	}
 
+	
+	// I suppose we should be retrieving these from the database instead.
+	public List<Recommendation> getCurrentRecommendations(){
+		CalcAndStoreRecommendations();
+		return curRecs;
+	}
 }

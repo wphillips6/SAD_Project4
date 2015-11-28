@@ -2,6 +2,7 @@ package proj4.serverapp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -179,7 +180,6 @@ public class AdminEntry {
 			else
 			{
 
-				//myServerApplication.updateCourse(c, shadow, this.s);
 				sa.removeCourse(c, shadow);
 			}
 		}
@@ -333,9 +333,16 @@ public class AdminEntry {
 		
 	}
 	
-	public String getStudentInfo(String name, boolean prefsOrRecs) {
-
-		return null;
+	public List<String> getStudentInfo(String name, boolean prefsOrRecs) {
+		Student s = sa.getStudent(name);
+		List<Course> courseList = new ArrayList<Course>();
+		List<String> stringyCourseList = new ArrayList<String>();
+		if( prefsOrRecs) courseList = s.getDesiredCourses();
+		else courseList =  sa.getStudentEntry().getCurrentRecommendation(name);
+		for (Course c: courseList){
+			stringyCourseList.add(c.getID() + " " + c.getDescription());
+		}
+		return stringyCourseList;
 	}
 
 
