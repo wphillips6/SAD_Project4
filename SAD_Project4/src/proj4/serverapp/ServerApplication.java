@@ -15,6 +15,13 @@ import proj4.common.Course;
 import proj4.common.TeacherAssistant;
 import proj4.common.Administrator;
 
+/**
+ * @author ubuntu
+ * 
+ * This is the main part of the server application.  It is assisted by the 
+ * Student and AdminEntry classes that handle tasks that are specific
+ * to students or Admins.
+ */
 public class ServerApplication {
 
 	//  Database credentials - This is incredibly insecure.  Don't ever
@@ -53,6 +60,13 @@ public class ServerApplication {
 		return 0;
 	}
 
+	/**
+	 * Queries the database and returns a Student object based on what is currently
+	 * in the datbase.
+	 * 
+	 * @param studentID  the ID or username of the student
+	 * @return		Student object corresponding to the entry in the database
+	 */
 	public Student getStudent(String studentID) {
 		Student retVal = null;
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ?";
@@ -83,6 +97,14 @@ public class ServerApplication {
 		return retVal;
 	}
 
+	/**
+	 * Queries the database and returns a TA object based on what is currently
+	 * in the datbase.
+	 * 
+	 * @param studentID  the ID or username of the TA
+	 * @return		TeacherAssistant object corresponding to the entry in the database
+	 */
+	
 	public TeacherAssistant getTA(String taID) {
 		TeacherAssistant retVal = null;
 		String selTA = "SELECT * from CourseData.TA WHERE StaffID = ?";
@@ -102,6 +124,14 @@ public class ServerApplication {
 		}
 		return retVal;
 	}
+	
+	/**
+	 * Queries the database and returns a Professor object based on what is currently
+	 * in the database.
+	 * 
+	 * @param profID  the ID or username of the Professor
+	 * @return		Professor object corresponding to the entry in the database
+	 */
 
 	public Professor getProf(String profID) {
 		Professor retVal = null;
@@ -184,6 +214,13 @@ public class ServerApplication {
 		return 0;
 	}
 
+	/**
+	 * Queries the database and returns a Course object based on what is 
+	 * currently in the database.
+	 * 
+	 * @param name	CourseID to look for in the database
+	 * @return		Course object corresponding to the entry in the database
+	 */
 	public Course getCourse(String name) {
 		Course retVal = null;
 		String sel = "SELECT * from CourseData.Course WHERE CourseID = ?";
@@ -211,6 +248,12 @@ public class ServerApplication {
 //		this.setSemester(s);
 //	}
 	
+	/**
+	 * Same as getCourse only this method looks by course number
+	 * 
+	 * @param num	This is the course number
+	 * @return		Course object that corresponds to the entry in the database
+	 */
 	public Course getCourseByNum(String num) {
 		Course retVal = null;
 		String sel = "SELECT * from CourseData.Course WHERE CourseNum = ?";
@@ -230,6 +273,11 @@ public class ServerApplication {
 		return retVal;
 	}
 	
+	/**
+	 * Gets all Course entries in the database and converts them to objects
+	 * 
+	 * @return	List of all Courses currently in the database
+	 */
 	public List<Course> getAllCourses() {
 		ArrayList<Course> retVal = new ArrayList<Course>();
 		String sel = "SELECT CourseNum from CourseData.Course";
@@ -244,6 +292,12 @@ public class ServerApplication {
 		}
 		return retVal;
 	}
+	
+	/**
+	 * Gets all TA entries in the database and converts them to objects
+	 * 
+	 * @return	List of all TAs currently in the database
+	 */
 	
 	public List<TeacherAssistant> getAllTAs() {
 		ArrayList<TeacherAssistant> retVal = new ArrayList<TeacherAssistant>();
@@ -260,6 +314,11 @@ public class ServerApplication {
 		return retVal;
 	}
 	
+	/**
+	 * Gets all Professor entries in the database and converts them to objects
+	 * 
+	 * @return	List of all Professors currently in the database
+	 */
 	public List<Professor> getAllProfs() {
 		ArrayList<Professor> retVal = new ArrayList<Professor>();
 		String selProf = "SELECT * from CourseData.Professor";
@@ -275,6 +334,11 @@ public class ServerApplication {
 		return retVal;
 	}
 	
+	/**
+	 * Gets all Student entries in the database and converts them to objects
+	 * 
+	 * @return	List of all Students currently in the database
+	 */
 	public List<Student> getAllStudents() {
 		ArrayList<Student> retVal = new ArrayList<Student>();
 		String selStudent = "SELECT uID from CourseData.Student";

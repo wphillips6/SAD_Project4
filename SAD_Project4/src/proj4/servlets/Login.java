@@ -28,6 +28,11 @@ public class Login extends HttpServlet {
     }
 
 	/**
+	 * This Login Servlet is the first object that should get created after
+	 * the program launches.  From here, the Login Servlet will create
+	 * a ServerApplication, that creates Student and AdminEntries and
+	 * connects to the database.
+	 * 
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
@@ -35,6 +40,8 @@ public class Login extends HttpServlet {
 	}
 
 	/**
+	 * We don't pass information via GET.
+	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,6 +50,10 @@ public class Login extends HttpServlet {
 	}
 
 	/**
+	 * This method handles HTTP requests to login.  It will find out if the login
+	 * is valid and what role to assign.  This Servlet assigns session variables
+	 * needed by the rest of the application.
+	 * 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
