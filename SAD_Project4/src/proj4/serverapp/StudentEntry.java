@@ -84,7 +84,9 @@ public void setNumDesiredCourses(String studentID, int num) {
   public void setSemester( Semester s) {
   }
 
-  public void getCurrentRecommendation(String studentID) {
+  public List<Course> getCurrentRecommendation(String studentID) {
+	  Student s = sa.getStudent(studentID);
+	  return null;
   }
   
   public List<Course> getAllCourses() {

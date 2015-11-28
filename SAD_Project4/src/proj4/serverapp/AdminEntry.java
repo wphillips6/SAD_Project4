@@ -141,7 +141,7 @@ public class AdminEntry {
 					sem = new Semester(Semester.SemesterTerm.SUMMER);
 				else sem = new Semester(Semester.SemesterTerm.EVERY);
 				Course c = new Course(cid,cid.substring(cNumStrt), cDesc, "",sem );
-				sa.updateCourse(c, shadow, this.s);
+				sa.addCourse(c, shadow, this.s);
 			}
 		}
 		return error;
@@ -180,7 +180,7 @@ public class AdminEntry {
 			{
 
 				//myServerApplication.updateCourse(c, shadow, this.s);
-				//myServerApplication.removeCourse(c, shadow);
+				sa.removeCourse(c, shadow);
 			}
 		}
 		return error;
@@ -253,23 +253,10 @@ public class AdminEntry {
 		return null;
 	}
 	
-	public String setProfessorCourses( String profId, String courses,boolean addOrRemove, 
-			boolean astOrPrfcy, boolean shadow) {
-
-		return null;
-	}
-	
 	public void getTAPool() {
 		
 	}
-	
-	public String setTACourses(String taId, String courses, boolean addOrRemove, 
-			boolean astOrPrfcy, boolean shadow) {
-		
-		
-		return null;
-	}
-	
+
 
 	public void addTA(String name) {
 		System.out.println("AE: adding TA " + name);
