@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ page import="proj4.common.Administrator" %>
 <%
 	if (session == null || session.getAttribute("username") == null ||
 			session.getAttribute("isadmin") == null ||
@@ -19,17 +19,14 @@
 	<div class="content">
 		<div class="content">
 			<h1>
-				Welcome, 
-				<%
-				out.print(session.getAttribute("username"));
-			%>. Would you like to...
+				Welcome, ${administrator.getName()}. Would you like to...
 			</h1>
 		</div>
 
 		<nav>
 		<ul>
-			<li><a href="http://www.google.com">Google</a></li>
-			<li><a href="http://www.yahoo.com">Yahoo</a></li>
+			<li><a href="http://www.gatech.edu/">GATech</a></li>
+			<li><a href="http://www.omscs.gatech.edu/courses/">OMSCS Courses</a></li>
 			<%
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");

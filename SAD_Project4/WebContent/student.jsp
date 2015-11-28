@@ -30,8 +30,8 @@
 
 		<nav>
 		<ul>
-			<li><a href="http://www.google.com">Google</a></li>
-			<li><a href="http://www.yahoo.com">Yahoo</a></li>
+			<li><a href="http://www.gatech.edu/">GATech</a></li>
+			<li><a href="http://www.omscs.gatech.edu/courses/">OMSCS Courses</a></li>
 			<%
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");
@@ -40,7 +40,7 @@
 		</ul>
 		</nav>
 
-		<section> <span><p>Current Reccommendation</p></span>
+		<section> <span><p>Current Recommendation</p></span>
 		<table>
 		<tr>
 		<th>Course ID</th><th>Course Name</th>
