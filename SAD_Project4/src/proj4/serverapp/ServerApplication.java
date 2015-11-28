@@ -13,6 +13,7 @@ import proj4.common.Student;
 import proj4.common.Professor;
 import proj4.common.Course;
 import proj4.common.TeacherAssistant;
+import proj4.common.Administrator;
 
 public class ServerApplication {
 
@@ -121,6 +122,24 @@ public class ServerApplication {
 		}
 		return retVal;
 	}
+	
+	public Administrator getAdmin(String adminID) {
+		Administrator retVal = null;
+		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ?";
+		try {
+			PreparedStatement sqlSelAdmin = dbConnection.prepareStatement(selAdmin);
+			sqlSelAdmin.setString(1, adminID);
+			ResultSet rs = sqlSelAdmin.executeQuery();
+			rs.last();
+			int n = rs.getRow();
+			if(n==1) {
+				retVal = new Administrator(rs.getString("uID"), rs.getString("Name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
+	}
 
 	/**
 	 * Called by the Web App to determine if a given username/password
@@ -137,6 +156,7 @@ public class ServerApplication {
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
 		try {
+			dbConnection.setAutoCommit(false);			
 			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
 			PreparedStatement sqlSelAdmin = dbConnection.prepareStatement(selAdmin);
 			System.out.println("**Checking " + usrname + " with " + pwd);
