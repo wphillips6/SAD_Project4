@@ -13,7 +13,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
-<title>Admin Landing Page</title>
+<title>Admin - ${administrator.getName()}</title>
 </head>
 <body>
 	<div class="content">

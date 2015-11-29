@@ -18,7 +18,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
-<title>Student Page</title>
+<title>Student - ${student.getName()}</title>
 </head>
 <body>
 	<div class="content">
@@ -48,9 +48,10 @@
 		<%
 		Student s = (Student)session.getAttribute("student");
 		List l = s.getDesiredCourses();
+		List lCurrRecs = s.getCurrentRecs();
 		//System.out.println("Studnt List size:  " + l.size());
-		for(int i = 0; i < l.size(); i++){
-			Course c = (Course)l.get(i);
+		for(int i = 0; i < lCurrRecs.size(); i++){
+			Course c = (Course)lCurrRecs.get(i);
 			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
 		}
 		%>
