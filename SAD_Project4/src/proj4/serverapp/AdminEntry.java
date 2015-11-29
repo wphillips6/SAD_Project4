@@ -15,13 +15,9 @@ import org.apache.tomcat.jni.Time;
 
 
 public class AdminEntry {
-	private Integer enrollLimit;
-	private List<String> semesterCourse;
+	private List<String> semesterCourses;
 	public Semester s;
-	private List<String> professor;
-	private List<String> professorCourses;
-	private List<String> taPool;
-	private List<String> taCourses;
+
 	private ServerApplication sa;
 	private Connection dbConnection;
 
@@ -238,10 +234,6 @@ public class AdminEntry {
 		return s.getId();
 	}
 	
-	public void setSemester( String s) {
-		
-	}
-	
 	public void getProfessorById(String id) {
 		
 	}
@@ -251,10 +243,6 @@ public class AdminEntry {
 	}
 	public List<Course> getProfessorCourses(String profId) {
 		return null;
-	}
-	
-	public void getTAPool() {
-		
 	}
 
 
@@ -342,10 +330,23 @@ public class AdminEntry {
 		for (Course c: courseList){
 			stringyCourseList.add(c.getID() + " " + c.getDescription());
 		}
+		if(semesterCourses == null) semesterCourses = new ArrayList<String>();
+		semesterCourses = stringyCourseList;
+		semesterCourses.add(0, name);
 		return stringyCourseList;
 	}
 
-
+	public boolean displayStudentData(){
+		return semesterCourses == null;
+	}
+	
+	public List<String> infoForCurrentStudent(){
+		return semesterCourses;
+	}
+	
+	public void resetStudentDisp(){
+		semesterCourses = null;
+	}
 
 	
 }

@@ -4,6 +4,7 @@
 <%@ page import="proj4.common.Course" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
+<%@ page import="proj4.serverapp.StudentEntry" %>
 
 <%
 	if (session == null || session.getAttribute("username") == null) {
@@ -49,6 +50,9 @@
 		Student s = (Student)session.getAttribute("student");
 		List l = s.getDesiredCourses();
 		List lCurrRecs = s.getCurrentRecs();
+		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
+		StudentEntry se = sa.getStudentEntry();
+		lCurrRecs = se.getCurrentRecommendation(s.getUID());
 		//System.out.println("Studnt List size:  " + l.size());
 		for(int i = 0; i < lCurrRecs.size(); i++){
 			Course c = (Course)lCurrRecs.get(i);
@@ -61,7 +65,6 @@
 		<section><span><p>Set Preferences</p></span>
 			<form method="POST" action="Student">
 			<%
-			ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
 			List<Course> crsList = sa.getAllCourses();
 			for(int i = 0; i < 10; i++) {
 				String crsOptionsHTML = "";

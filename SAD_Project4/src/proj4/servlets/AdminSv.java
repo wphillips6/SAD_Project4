@@ -139,11 +139,14 @@ public class AdminSv extends HttpServlet {
 			String student = request.getParameter("stuname");
 			String dispType = request.getParameter("dispType");
 			List<String> courses = ae.getStudentInfo(student, dispType.equals("prefs") );
-			if (courses.size() != 0) response.sendRedirect("admin.jsp");
+			if (courses.size() != 0) response.sendRedirect("dispStudentStats.jsp");
 			else{
 				// err
 			}
 
+	    }else if(f.compareTo("back") == 0){
+	    	ae.resetStudentDisp();
+	    	response.sendRedirect("admin.jsp");
 	    }
 	    
 	    
