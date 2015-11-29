@@ -97,7 +97,7 @@ public class ServerApplication {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Returning Timestamp:  "+retVal);
+		//System.out.println("Returning Timestamp:  "+retVal);
 		return retVal;
 	}
 
@@ -264,9 +264,11 @@ public class ServerApplication {
 	 * 					2 - successful student login
 	 */
 	public int validateUser(String usrname, String pwd) {
+		int retVal = 0;
 		System.out.println("Checking credentials in database...");
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
+		boolean isAdmin = false;
 		try {
 			dbConnection.setAutoCommit(false);			
 			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
@@ -278,7 +280,7 @@ public class ServerApplication {
 			rs.last();
 			int n = rs.getRow();
 			if(n==1) {
-				return 2;
+				retVal = 2;
 			}
 			//System.out.println("N is " + n);
 			sqlSelAdmin.setString(1, usrname);
@@ -287,13 +289,26 @@ public class ServerApplication {
 			rs.last();
 			n = rs.getRow();
 			if(n==1) {
-				return 1;
+				retVal = 1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return 0;
+		//Logging
+		String updLog = "INSERT INTO CourseData.LoginEvents VALUES(?,?,?,?,null)";
+		try {
+			PreparedStatement updStatement = dbConnection.prepareStatement(updLog);
+			updStatement.setString(1,usrname);
+			updStatement.setFloat(2, System.currentTimeMillis());
+			updStatement.setInt(3, retVal);
+			updStatement.setInt(4, retVal);
+			updStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		return retVal;
 	}
 
 	/**
