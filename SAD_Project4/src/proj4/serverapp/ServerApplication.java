@@ -109,12 +109,12 @@ public class ServerApplication {
 				String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
 				PreparedStatement sqlStmt = dbConnection.prepareStatement(topRecNum);
 				ResultSet rsTopRec = sqlStmt.executeQuery();
-				rsTopRec.next();
-				float timestamp = rsTopRec.getFloat("TimeStamp");
-				System.out.println("TOP VALUE:  " + timestamp);
-				rsTopRec.last();
-				n = rsTopRec.getRow();
-				if(n==1) {
+				if( rsTopRec.next() ){
+					float timestamp = rsTopRec.getFloat("TimeStamp");
+					System.out.println("TOP VALUE:  " + timestamp);
+					rsTopRec.last();
+					n = rsTopRec.getRow();
+					//if(n==1) {
 					String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
 					sqlStmt = dbConnection.prepareStatement(selStmt);
 					sqlStmt.setString(1, retVal.getUID());
