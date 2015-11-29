@@ -53,6 +53,7 @@ public class ServerApplication {
 		}
 		se = new StudentEntry(this, dbConnection);
 		ae = new AdminEntry(this, dbConnection);
+
 		//this.CalcAndStoreRecommendations();
 	}
 	
@@ -470,6 +471,16 @@ public class ServerApplication {
 		return ae;
 	}
 
+	
+	/**
+	 * updates an existing course in the database with the semester it is to be
+	 * offered during as well as a new enrollment limit.
+	 * 
+	 * @param Course pertaining to an existing course entry in the database.
+	 * @param boolean indicating whether the course modification should be applied to the
+	 *        standard or shadow version of the linear model
+	 * @param the semester terms during which the course is to be offered
+	 */
 	public void updateCourse(Course c, boolean shadow, Semester s) {
 		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? AND `SemesterOffered` = ? WHERE CourseNum = ?";
 		try {
@@ -484,6 +495,16 @@ public class ServerApplication {
 		
 	}
 	
+	
+	/**
+	 * Used by the other servlets to get a copy of the right objects to interact
+	 * with the rest of the model
+	 * 
+	 * @param Course pertaining containing the data to be inserted into the database.
+	 * @param boolean indicating whether the course addition should be applied to the
+	 *        standard or shadow version of the linear model
+	 * @param the semester terms during which the course is to be offered
+	 */
 	public void addCourse(Course c, boolean shadow, Semester s){
 		String insStmt = "INSERT INTO CourseData.Course (`CourseNum`, `CourseID`, "
 				       + "`Description`, `CourseLimit`, `Prerequisite`, `Corequisite`, "
@@ -505,6 +526,13 @@ public class ServerApplication {
 		}
 	}
 	
+	/**
+	 * removes an existing course in the database from therein.
+	 * 
+	 * @param Course pertaining to an existing course entry in the database.
+	 * @param boolean indicating whether the course removal should be applied to the
+	 *        standard or shadow version of the linear model
+	 */
 	public void removeCourse(Course c, boolean shadow ){
 		String delStmt = "DELETE FROM CourseData.Course WHERE `CourseNum` = ? AND " +
 						 "`CourseID` = ? AND `Description` = ? ";
@@ -516,13 +544,18 @@ public class ServerApplication {
 		}
 	}
 		
+	/**
+	 * calls the optimizer to calculate a round of recommendations using
+	 * all of the freshest data from the database. 
+	 */
 	public void CalcAndStoreRecommendations() {
 		try {
 			Statement truncate = dbConnection.createStatement();
 			truncate.executeUpdate("TRUNCATE CourseData.OptimizerRecs");
 			CourseCatalog cc = new CourseCatalog(this);
 			ComputationalEngine ce = new ComputationalEngine(cc, this.getAllStudents(), this.getAllProfs(), this.getAllTAs());
-		    curRecs = new ArrayList<Recommendation>(ce.CalculateSchedule());
+		    curRecs = new ArrayList<Recommendation>();
+		    curRecs = ce.CalculateSchedule();
 			long mills = System.currentTimeMillis();
 			String insStmt = "INSERT INTO CourseData.OptimizerRecs VALUES(?, ?, ?, ?, ?)";
 		
@@ -547,7 +580,12 @@ public class ServerApplication {
 	}
 
 	
-	// I suppose we should be retrieving these from the database instead.
+	/**
+	 * Forces a recalc of the current database model parameters and returns
+	 * the result
+	 * 
+	 * @return list of recommendations for analysis
+	 */
 	public List<Recommendation> getCurrentRecommendations(){
 		CalcAndStoreRecommendations();
 		return curRecs;
