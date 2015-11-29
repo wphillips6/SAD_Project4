@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import proj4.common.Course;
+import proj4.common.Recommendation;
 import proj4.common.Semester;
 import proj4.common.Student;
 
@@ -84,7 +85,16 @@ public void setNumDesiredCourses(String studentID, int num) {
   public void setSemester( Semester s) {
   }
 
-  public void getCurrentRecommendation(String studentID) {
+  public List<Course> getCurrentRecommendation(String studentID) {
+	  List<Recommendation> r = sa.getCurrentRecommendations();
+	  List<Course> retVal = new ArrayList<Course>();
+	  for (Recommendation rec: r){
+		  for(Student s: rec.getStudents()){
+			  if(sa.getStudent(studentID).getUID() == s.getUID()) retVal.add(rec.getCourse());
+
+		  }
+	  }
+	  return retVal;
   }
   
   public List<Course> getAllCourses() {
@@ -93,6 +103,10 @@ public void setNumDesiredCourses(String studentID, int num) {
   
   public Student getStudent(String studentID) {
 	  return sa.getStudent(studentID);
+  }
+  
+  public void CalcAndStoreRecommendations() {
+	  sa.CalcAndStoreRecommendations();
   }
 
 }

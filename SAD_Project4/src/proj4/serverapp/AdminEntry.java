@@ -2,6 +2,7 @@ package proj4.serverapp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -141,7 +142,7 @@ public class AdminEntry {
 					sem = new Semester(Semester.SemesterTerm.SUMMER);
 				else sem = new Semester(Semester.SemesterTerm.EVERY);
 				Course c = new Course(cid,cid.substring(cNumStrt), cDesc, "",sem );
-				sa.updateCourse(c, shadow, this.s);
+				sa.addCourse(c, shadow, this.s);
 			}
 		}
 		return error;
@@ -150,7 +151,7 @@ public class AdminEntry {
 	}
 	
 	/**
-	 * Method addCourse removes a course from the course catalog. if there is no
+	 * Method removeCourse removes a course from the course catalog. if there is no
 	 *                  course identifiable by the entered desc an error is
 	 *                  returned
 	 *                  already exists an error message is returned
@@ -179,8 +180,7 @@ public class AdminEntry {
 			else
 			{
 
-				//myServerApplication.updateCourse(c, shadow, this.s);
-				//myServerApplication.removeCourse(c, shadow);
+				sa.removeCourse(c, shadow);
 			}
 		}
 		return error;
@@ -253,23 +253,10 @@ public class AdminEntry {
 		return null;
 	}
 	
-	public String setProfessorCourses( String profId, String courses,boolean addOrRemove, 
-			boolean astOrPrfcy, boolean shadow) {
-
-		return null;
-	}
-	
 	public void getTAPool() {
 		
 	}
-	
-	public String setTACourses(String taId, String courses, boolean addOrRemove, 
-			boolean astOrPrfcy, boolean shadow) {
-		
-		
-		return null;
-	}
-	
+
 
 	public void addTA(String name) {
 		System.out.println("AE: adding TA " + name);
@@ -346,9 +333,16 @@ public class AdminEntry {
 		
 	}
 	
-	public String getStudentInfo(String name, boolean prefsOrRecs) {
-
-		return null;
+	public List<String> getStudentInfo(String name, boolean prefsOrRecs) {
+		Student s = sa.getStudent(name);
+		List<Course> courseList = new ArrayList<Course>();
+		List<String> stringyCourseList = new ArrayList<String>();
+		if( prefsOrRecs) courseList = s.getDesiredCourses();
+		else courseList =  sa.getStudentEntry().getCurrentRecommendation(name);
+		for (Course c: courseList){
+			stringyCourseList.add(c.getID() + " " + c.getDescription());
+		}
+		return stringyCourseList;
 	}
 
 

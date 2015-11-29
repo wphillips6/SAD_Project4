@@ -37,9 +37,10 @@ public class Optimizer {
 	}
 
 	//Calculate the optimal schedule for student
-	public void Calculate() {
+	public List<Recommendation> Calculate() {
 		
 		GRBEnv env;
+		List<Recommendation> recommendations = null;
 		try {
 			env = new GRBEnv("mip1.log");
 			GRBModel model = new GRBModel(env);
@@ -233,7 +234,7 @@ public class Optimizer {
 			
             // *** Solution ***
             
-            List<Recommendation> recommendations  = new ArrayList<Recommendation>();
+            recommendations  = new ArrayList<Recommendation>();
             for (int j = 0; j < nCourses; j++) {
                 Recommendation rec = null;
                 for (int i = 0; i < nStudents; i++) {
@@ -288,5 +289,6 @@ public class Optimizer {
 		} catch (GRBException e) {
 			e.printStackTrace();
 		}
+		return recommendations;
 	}
 }

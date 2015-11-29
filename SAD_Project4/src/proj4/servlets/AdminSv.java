@@ -1,6 +1,7 @@
 package proj4.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -137,8 +138,8 @@ public class AdminSv extends HttpServlet {
 	    } else if(f.compareTo("dispRecsPrefs") == 0){
 			String student = request.getParameter("stuname");
 			String dispType = request.getParameter("dispType");
-			String error = ae.getStudentInfo(student, dispType.equals("prefs") );
-			if (error == null) response.sendRedirect("admin.jsp");
+			List<String> courses = ae.getStudentInfo(student, dispType.equals("prefs") );
+			if (courses.size() != 0) response.sendRedirect("admin.jsp");
 			else{
 				// err
 			}
