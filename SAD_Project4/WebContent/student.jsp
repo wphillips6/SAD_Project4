@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="proj4.common.Student" %>
 <%@ page import="proj4.common.Course" %>
+<%@ page import="proj4.common.CourseCatalog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
 
@@ -26,6 +27,7 @@
 			<h1>
 				Hello, ${student.getName()}
 			</h1>
+			<h4> Number of Credits Completed: ${student.getCreditsCompleted()}</h4>
 		</div>
 
 		<nav>
@@ -36,11 +38,11 @@
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");
 				}
-			%>
+			%>	
 		</ul>
 		</nav>
 
-		<section> <span><p>Current Recommendation</p></span>
+		<section> <span><h4>Current Recommendation</h4></span>
 		<table>
 		<tr>
 		<th>Course ID</th><th>Course Name</th>
@@ -57,8 +59,24 @@
 		%>
 		</table>
 		</section>
+		
+		<section> <span><h4>Courses Completed</h4></span>
+		<table>
+		<tr>
+		<th>Course ID</th><th>Course Name</th>
+		</tr>
+		<%
+		List lCompletedCourses = s.getCompletedCourses();
+		//System.out.println("Studnt List size:  " + l.size());
+		for(int i = 0; i < lCompletedCourses.size(); i++){
+			Course c = (Course)lCompletedCourses.get(i);
+			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
+		}
+		%>
+		</table>
+		</section>
 
-		<section><span><p>Set Preferences</p></span>
+		<section><span><h4>Set Preferences</h4></span>
 			<form method="POST" action="Student">
 			<%
 			ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");

@@ -39,6 +39,10 @@ public class Student {
     	return uID;
     }
     
+    public int getCreditsCompleted(){
+    	return creditsComplete;
+    }
+    
     public void setUID(String u) {
     	this.uID = u;
     }
