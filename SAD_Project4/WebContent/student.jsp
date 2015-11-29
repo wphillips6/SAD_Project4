@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="proj4.common.Student" %>
 <%@ page import="proj4.common.Course" %>
+<%@ page import="proj4.common.CourseCatalog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
 <%@ page import="proj4.serverapp.StudentEntry" %>
@@ -19,7 +20,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
-<title>Student Page</title>
+<title>Student - ${student.getName()}</title>
 </head>
 <body>
 	<div class="content">
@@ -27,6 +28,7 @@
 			<h1>
 				Hello, ${student.getName()}
 			</h1>
+			<h4> Number of Credits Completed: ${student.getCreditsCompleted()}</h4>
 		</div>
 
 		<nav>
@@ -37,11 +39,11 @@
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");
 				}
-			%>
+			%>	
 		</ul>
 		</nav>
 
-		<section> <span><p>Current Recommendation</p></span>
+		<section> <span><h4>Current Recommendation</h4></span>
 		<table>
 		<tr>
 		<th>Course ID</th><th>Course Name</th>
@@ -61,8 +63,24 @@
 		%>
 		</table>
 		</section>
+		
+		<section> <span><h4>Courses Completed</h4></span>
+		<table>
+		<tr>
+		<th>Course ID</th><th>Course Name</th>
+		</tr>
+		<%
+		List lCompletedCourses = s.getCompletedCourses();
+		//System.out.println("Studnt List size:  " + l.size());
+		for(int i = 0; i < lCompletedCourses.size(); i++){
+			Course c = (Course)lCompletedCourses.get(i);
+			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
+		}
+		%>
+		</table>
+		</section>
 
-		<section><span><p>Set Preferences</p></span>
+		<section><span><h4>Set Preferences</h4></span>
 			<form method="POST" action="Student">
 			<%
 			List<Course> crsList = sa.getAllCourses();
@@ -72,10 +90,12 @@
 				boolean found = false;
 				for(int j = 0; j < crsList.size(); j++){
 					if(i < l.size() && l.get(i).equals(crsList.get(j))) {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+
+								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
 						found = true;
 					} else {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+
+								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
 					}
 				}
 				if(!found){

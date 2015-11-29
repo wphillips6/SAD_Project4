@@ -60,10 +60,45 @@ public class ServerApplication {
 		new ServerApplication();
 	}
 
-	public int getCourseDemand(String courseID) {
-		//TODO:  SQL query to take courseid and get the number of students wanting
-		// to take this course
-		return 0;
+	public int getCourseDemand(int crsNumber) {
+		int retVal = 0;
+		float timestamp = this.getCurrentRecTimestamp();
+		String topRecNum = "SELECT COUNT(uID_student) FROM CourseData.OptimizerRecs WHERE `TimeStamp` = ? AND CourseID = ?";
+		PreparedStatement sqlStmt;
+		try {
+			sqlStmt = dbConnection.prepareStatement(topRecNum);
+			sqlStmt.setFloat(1, timestamp);
+			sqlStmt.setInt(2, crsNumber);
+			ResultSet rsTopRec = sqlStmt.executeQuery();
+			if( rsTopRec.next() ){
+				retVal = rsTopRec.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return retVal;
+	}
+	
+	public float getCurrentRecTimestamp(){
+		float retVal = 0;
+		String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
+		PreparedStatement sqlStmt;
+		try {
+			sqlStmt = dbConnection.prepareStatement(topRecNum);
+			ResultSet rsTopRec = sqlStmt.executeQuery();
+			if( rsTopRec.next() ){
+				retVal = rsTopRec.getFloat("TimeStamp");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//System.out.println("Returning Timestamp:  "+retVal);
+		return retVal;
 	}
 
 	/**
@@ -105,27 +140,18 @@ public class ServerApplication {
 					}
 				}
 				retVal.setCompletedCourses(l);
-				//TODO: Get Recommendation
-				String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
-				PreparedStatement sqlStmt = dbConnection.prepareStatement(topRecNum);
+				//Get Recommendation
+				float timestamp = this.getCurrentRecTimestamp();
+				String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
+				PreparedStatement sqlStmt = dbConnection.prepareStatement(selStmt);
+				sqlStmt.setString(1, retVal.getUID());
+				sqlStmt.setFloat(2, timestamp);
 				ResultSet rsTopRec = sqlStmt.executeQuery();
-				rsTopRec.next();
-				float timestamp = rsTopRec.getFloat("TimeStamp");
-				System.out.println("TOP VALUE:  " + timestamp);
-				rsTopRec.last();
-				n = rsTopRec.getRow();
-				if(n==1) {
-					String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
-					sqlStmt = dbConnection.prepareStatement(selStmt);
-					sqlStmt.setString(1, retVal.getUID());
-					sqlStmt.setFloat(2, timestamp);
-					rsTopRec = sqlStmt.executeQuery();
-					ArrayList<Course> crsRecList = new ArrayList<Course>();
-					while(rsTopRec.next()){
-						crsRecList.add(this.getCourseByNum(rsTopRec.getString("CourseID")));
-					}
-					retVal.setCurrentRecs(crsRecList);
+				ArrayList<Course> crsRecList = new ArrayList<Course>();
+				while(rsTopRec.next()){
+					crsRecList.add(this.getCourseByNum(rsTopRec.getString("CourseID")));
 				}
+				retVal.setCurrentRecs(crsRecList);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -238,9 +264,11 @@ public class ServerApplication {
 	 * 					2 - successful student login
 	 */
 	public int validateUser(String usrname, String pwd) {
+		int retVal = 0;
 		System.out.println("Checking credentials in database...");
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
+		boolean isAdmin = false;
 		try {
 //			dbConnection.setAutoCommit(false);			
 			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
@@ -252,7 +280,7 @@ public class ServerApplication {
 			rs.last();
 			int n = rs.getRow();
 			if(n==1) {
-				return 2;
+				retVal = 2;
 			}
 			//System.out.println("N is " + n);
 			sqlSelAdmin.setString(1, usrname);
@@ -261,13 +289,26 @@ public class ServerApplication {
 			rs.last();
 			n = rs.getRow();
 			if(n==1) {
-				return 1;
+				retVal = 1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return 0;
+		//Logging
+		String updLog = "INSERT INTO CourseData.LoginEvents VALUES(?,?,?,?,null)";
+		try {
+			PreparedStatement updStatement = dbConnection.prepareStatement(updLog);
+			updStatement.setString(1,usrname);
+			updStatement.setFloat(2, System.currentTimeMillis());
+			updStatement.setInt(3, retVal);
+			updStatement.setInt(4, retVal);
+			updStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		return retVal;
 	}
 
 	/**
@@ -289,21 +330,16 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), rs.getString("Description"),
 						"", rs.getString("PreRequisite"), null, rs.getInt("CourseLimit"));
+				retVal.setNumber(rs.getString("CourseNum"));
+				retVal.setDemand(this.getCourseDemand(rs.getInt("CourseNum")));
+				System.out.println("Setting Course:  " + retVal.getID() + " " + retVal.getDemand());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return retVal;
 	}
-	
-//	public Course(String i, String n, String d, String p, Semester s) {
-//		this.setID(i);
-//		this.setNumber(n);
-//		this.setDescription(d);
-//		this.setPrerequisite(p);
-//		this.setSemester(s);
-//	}
-	
+		
 	/**
 	 * Same as getCourse only this method looks by course number
 	 * 
@@ -322,6 +358,8 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), num, rs.getString("Description"),
 						rs.getString("Prerequisite"), null, rs.getInt("CourseLimit"));
+				retVal.setNumber(rs.getString("CourseNum"));
+				retVal.setDemand(this.getCourseDemand(rs.getInt("CourseNum")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

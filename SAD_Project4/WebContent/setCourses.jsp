@@ -3,13 +3,14 @@
 <%@ page import="proj4.common.Course" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
+<%@ page import="proj4.common.Administrator" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="default.css">
 
-<title>Add or Remove Courses to be Offered</title>
+<title>Edit Course Offerings</title>
 </head>
 <body>
 	<div class="content">
@@ -17,12 +18,13 @@
 			<h1>
  				Modify Course Offerings..
 			</h1>
+			<h3>${administrator.getName()}</h3>
 		</div>
 
 		<nav>
 		<ul>
-			<li><a href="http://www.google.com">Google</a></li>
-			<li><a href="http://www.yahoo.com">Yahoo</a></li>
+			<li><a href="http://www.gatech.edu/">GATech</a></li>
+			<li><a href="http://www.omscs.gatech.edu/courses/">OMSCS Courses</a></li>
 			<%
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");

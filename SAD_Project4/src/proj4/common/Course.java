@@ -7,6 +7,7 @@ public class Course implements Comparable {
 	private String prerequisite;
 	private Semester semester;
 	private int enrollment;
+	private int demand;
 
 	public Course() {
 	}
@@ -18,6 +19,14 @@ public class Course implements Comparable {
 		this.setPrerequisite(p);
 		this.setSemester(s);
 		this.enrollment = 0;
+	}
+
+	public int getDemand() {
+		return demand;
+	}
+
+	public void setDemand(int f) {
+		this.demand = f;
 	}
 
 	public int getEnrollLim() {
