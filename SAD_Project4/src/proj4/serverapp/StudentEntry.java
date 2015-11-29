@@ -86,7 +86,8 @@ public void setNumDesiredCourses(String studentID, int num) {
   }
 
   public List<Course> getCurrentRecommendation(String studentID) {
-	  List<Recommendation> r = sa.getCurrentRecommendations();
+	  List<Recommendation> r = new ArrayList<Recommendation>();
+	  r = sa.getCurrentRecommendations();
 	  List<Course> retVal = new ArrayList<Course>();
 	  for (Recommendation rec: r){
 		  for(Student s: rec.getStudents()){

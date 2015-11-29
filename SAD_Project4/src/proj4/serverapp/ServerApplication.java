@@ -242,7 +242,7 @@ public class ServerApplication {
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
 		try {
-			dbConnection.setAutoCommit(false);			
+//			dbConnection.setAutoCommit(false);			
 			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
 			PreparedStatement sqlSelAdmin = dbConnection.prepareStatement(selAdmin);
 			System.out.println("**Checking " + usrname + " with " + pwd);

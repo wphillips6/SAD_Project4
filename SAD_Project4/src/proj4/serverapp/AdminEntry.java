@@ -337,7 +337,7 @@ public class AdminEntry {
 	}
 
 	public boolean displayStudentData(){
-		return semesterCourses == null;
+		return semesterCourses != null;
 	}
 	
 	public List<String> infoForCurrentStudent(){
