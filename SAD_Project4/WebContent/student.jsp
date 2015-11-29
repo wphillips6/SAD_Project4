@@ -87,10 +87,12 @@
 				boolean found = false;
 				for(int j = 0; j < crsList.size(); j++){
 					if(i < l.size() && l.get(i).equals(crsList.get(j))) {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+
+								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
 						found = true;
 					} else {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+
+								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
 					}
 				}
 				if(!found){
