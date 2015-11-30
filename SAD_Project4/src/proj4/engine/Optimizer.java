@@ -219,11 +219,11 @@ public class Optimizer {
 			// Set the objective as the sum of all student-courses
 			GRBLinExpr obj = new GRBLinExpr();
 			for (int i = 0; i < nStudents; i++) {
-				//int priority = 1;
+				int priority = 1;
 				for (int j = 0; j < nCourses; j++) {
-					//double coefficient = (1.0 / students.get(i).getCompletedCourses().size()) + (1.0 / priority * 10);
-					//obj.addTerm(coefficient, studentVar[i][j]);
-					//priority++;
+					double seniority = students.get(i).getCreditsComplete() + (1.0 / priority * 10);
+					obj.addTerm(seniority, studentVar[i][j]);
+					priority++;
 					obj.addTerm(1.0, studentVar[i][j]);
 				}
 			}

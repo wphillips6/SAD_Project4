@@ -51,6 +51,10 @@ public class Student {
     	return name;
     }
     
+    public int getCreditsComplete() {
+    	return creditsComplete;
+    }
+    
     public int getNumDesiredCourses() {
     	return numDesiredCourses;
     }
