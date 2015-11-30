@@ -2,10 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="proj4.common.Student" %>
 <%@ page import="proj4.common.Course" %>
-<%@ page import="proj4.common.CourseCatalog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
-<%@ page import="proj4.serverapp.StudentEntry" %>
 
 <%
 	if (session == null || session.getAttribute("username") == null) {
@@ -55,6 +53,7 @@
 		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
 	
 		//System.out.println("Studnt List size:  " + l.size());
+
 		for(int i = 0; i < lCurrRecs.size(); i++){
 			Course c = (Course)lCurrRecs.get(i);
 			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
@@ -70,7 +69,7 @@
 		</tr>
 		<%
 		List lCompletedCourses = s.getCompletedCourses();
-		//System.out.println("Studnt List size:  " + l.size());
+		
 		for(int i = 0; i < lCompletedCourses.size(); i++){
 			Course c = (Course)lCompletedCourses.get(i);
 			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
@@ -89,12 +88,10 @@
 				boolean found = false;
 				for(int j = 0; j < crsList.size(); j++){
 					if(i < l.size() && l.get(i).equals(crsList.get(j))) {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+
-								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
 						found = true;
 					} else {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+
-								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
 					}
 				}
 				if(!found){

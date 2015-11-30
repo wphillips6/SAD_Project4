@@ -53,7 +53,6 @@ public class ServerApplication {
 		}
 		se = new StudentEntry(this, dbConnection);
 		ae = new AdminEntry(this, dbConnection);
-
 		//this.CalcAndStoreRecommendations();
 	}
 	
@@ -61,45 +60,10 @@ public class ServerApplication {
 		new ServerApplication();
 	}
 
-	public int getCourseDemand(int crsNumber) {
-		int retVal = 0;
-		float timestamp = this.getCurrentRecTimestamp();
-		String topRecNum = "SELECT COUNT(uID_student) FROM CourseData.OptimizerRecs WHERE `TimeStamp` = ? AND CourseID = ?";
-		PreparedStatement sqlStmt;
-		try {
-			sqlStmt = dbConnection.prepareStatement(topRecNum);
-			sqlStmt.setFloat(1, timestamp);
-			sqlStmt.setInt(2, crsNumber);
-			ResultSet rsTopRec = sqlStmt.executeQuery();
-			if( rsTopRec.next() ){
-				retVal = rsTopRec.getInt(1);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		return retVal;
-	}
-	
-	public float getCurrentRecTimestamp(){
-		float retVal = 0;
-		String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
-		PreparedStatement sqlStmt;
-		try {
-			sqlStmt = dbConnection.prepareStatement(topRecNum);
-			ResultSet rsTopRec = sqlStmt.executeQuery();
-			if( rsTopRec.next() ){
-				retVal = rsTopRec.getFloat("TimeStamp");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//System.out.println("Returning Timestamp:  "+retVal);
-		return retVal;
+	public int getCourseDemand(String courseID) {
+		//TODO:  SQL query to take courseid and get the number of students wanting
+		// to take this course
+		return 0;
 	}
 
 	/**
@@ -141,18 +105,27 @@ public class ServerApplication {
 					}
 				}
 				retVal.setCompletedCourses(l);
-				//Get Recommendation
-				float timestamp = this.getCurrentRecTimestamp();
-				String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
-				PreparedStatement sqlStmt = dbConnection.prepareStatement(selStmt);
-				sqlStmt.setString(1, retVal.getUID());
-				sqlStmt.setFloat(2, timestamp);
+				//TODO: Get Recommendation
+				String topRecNum = "SELECT `TimeStamp` FROM CourseData.OptimizerRecs ORDER BY `TimeStamp` DESC LIMIT 1";
+				PreparedStatement sqlStmt = dbConnection.prepareStatement(topRecNum);
 				ResultSet rsTopRec = sqlStmt.executeQuery();
-				ArrayList<Course> crsRecList = new ArrayList<Course>();
-				while(rsTopRec.next()){
-					crsRecList.add(this.getCourseByNum(rsTopRec.getString("CourseID")));
+				rsTopRec.next();
+				float timestamp = rsTopRec.getFloat("TimeStamp");
+				System.out.println("TOP VALUE:  " + timestamp);
+				rsTopRec.last();
+				n = rsTopRec.getRow();
+				if(n==1) {
+					String selStmt = "SELECT CourseID from CourseData.OptimizerRecs WHERE uID_student = ? and TimeStamp = ?";
+					sqlStmt = dbConnection.prepareStatement(selStmt);
+					sqlStmt.setString(1, retVal.getUID());
+					sqlStmt.setFloat(2, timestamp);
+					rsTopRec = sqlStmt.executeQuery();
+					ArrayList<Course> crsRecList = new ArrayList<Course>();
+					while(rsTopRec.next()){
+						crsRecList.add(this.getCourseByNum(rsTopRec.getString("CourseID")));
+					}
+					retVal.setCurrentRecs(crsRecList);
 				}
-				retVal.setCurrentRecs(crsRecList);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -265,13 +238,11 @@ public class ServerApplication {
 	 * 					2 - successful student login
 	 */
 	public int validateUser(String usrname, String pwd) {
-		int retVal = 0;
 		System.out.println("Checking credentials in database...");
 		String selStudent = "SELECT * from CourseData.Student WHERE uID = ? AND Password = ?";
 		String selAdmin = "SELECT * from CourseData.Admin WHERE uID = ? AND Password = ?";
-		boolean isAdmin = false;
 		try {
-//			dbConnection.setAutoCommit(false);			
+			dbConnection.setAutoCommit(false);			
 			PreparedStatement sqlSelStudent = dbConnection.prepareStatement(selStudent);
 			PreparedStatement sqlSelAdmin = dbConnection.prepareStatement(selAdmin);
 			System.out.println("**Checking " + usrname + " with " + pwd);
@@ -281,7 +252,7 @@ public class ServerApplication {
 			rs.last();
 			int n = rs.getRow();
 			if(n==1) {
-				retVal = 2;
+				return 2;
 			}
 			//System.out.println("N is " + n);
 			sqlSelAdmin.setString(1, usrname);
@@ -290,26 +261,13 @@ public class ServerApplication {
 			rs.last();
 			n = rs.getRow();
 			if(n==1) {
-				retVal = 1;
+				return 1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		//Logging
-		String updLog = "INSERT INTO CourseData.LoginEvents VALUES(?,?,?,?,null)";
-		try {
-			PreparedStatement updStatement = dbConnection.prepareStatement(updLog);
-			updStatement.setString(1,usrname);
-			updStatement.setFloat(2, System.currentTimeMillis());
-			updStatement.setInt(3, retVal);
-			updStatement.setInt(4, retVal);
-			updStatement.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-				
-		return retVal;
+		
+		return 0;
 	}
 
 	/**
@@ -331,16 +289,21 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), rs.getString("Description"),
 						"", rs.getString("PreRequisite"), null, rs.getInt("CourseLimit"));
-				retVal.setNumber(rs.getString("CourseNum"));
-				retVal.setDemand(this.getCourseDemand(rs.getInt("CourseNum")));
-				System.out.println("Setting Course:  " + retVal.getID() + " " + retVal.getDemand());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return retVal;
 	}
-		
+	
+//	public Course(String i, String n, String d, String p, Semester s) {
+//		this.setID(i);
+//		this.setNumber(n);
+//		this.setDescription(d);
+//		this.setPrerequisite(p);
+//		this.setSemester(s);
+//	}
+	
 	/**
 	 * Same as getCourse only this method looks by course number
 	 * 
@@ -359,8 +322,6 @@ public class ServerApplication {
 			if(n==1) {
 				retVal = new Course(rs.getString("CourseID"), num, rs.getString("Description"),
 						rs.getString("Prerequisite"), null, rs.getInt("CourseLimit"));
-				retVal.setNumber(rs.getString("CourseNum"));
-				retVal.setDemand(this.getCourseDemand(rs.getInt("CourseNum")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -471,16 +432,6 @@ public class ServerApplication {
 		return ae;
 	}
 
-	
-	/**
-	 * updates an existing course in the database with the semester it is to be
-	 * offered during as well as a new enrollment limit.
-	 * 
-	 * @param Course pertaining to an existing course entry in the database.
-	 * @param boolean indicating whether the course modification should be applied to the
-	 *        standard or shadow version of the linear model
-	 * @param the semester terms during which the course is to be offered
-	 */
 	public void updateCourse(Course c, boolean shadow, Semester s) {
 		String insStmt = "UPDATE CourseData.Course SET `CourseLimit` = ? AND `SemesterOffered` = ? WHERE CourseNum = ?";
 		try {
@@ -495,16 +446,6 @@ public class ServerApplication {
 		
 	}
 	
-	
-	/**
-	 * Used by the other servlets to get a copy of the right objects to interact
-	 * with the rest of the model
-	 * 
-	 * @param Course pertaining containing the data to be inserted into the database.
-	 * @param boolean indicating whether the course addition should be applied to the
-	 *        standard or shadow version of the linear model
-	 * @param the semester terms during which the course is to be offered
-	 */
 	public void addCourse(Course c, boolean shadow, Semester s){
 		String insStmt = "INSERT INTO CourseData.Course (`CourseNum`, `CourseID`, "
 				       + "`Description`, `CourseLimit`, `Prerequisite`, `Corequisite`, "
@@ -526,13 +467,6 @@ public class ServerApplication {
 		}
 	}
 	
-	/**
-	 * removes an existing course in the database from therein.
-	 * 
-	 * @param Course pertaining to an existing course entry in the database.
-	 * @param boolean indicating whether the course removal should be applied to the
-	 *        standard or shadow version of the linear model
-	 */
 	public void removeCourse(Course c, boolean shadow ){
 		String delStmt = "DELETE FROM CourseData.Course WHERE `CourseNum` = ? AND " +
 						 "`CourseID` = ? AND `Description` = ? ";
@@ -544,10 +478,6 @@ public class ServerApplication {
 		}
 	}
 		
-	/**
-	 * calls the optimizer to calculate a round of recommendations using
-	 * all of the freshest data from the database. 
-	 */
 	public void CalcAndStoreRecommendations() {
 		try {
 			Statement truncate = dbConnection.createStatement();
@@ -555,6 +485,7 @@ public class ServerApplication {
 			CourseCatalog cc = new CourseCatalog(this);
 			ComputationalEngine ce = new ComputationalEngine(cc, this.getAllStudents(), this.getAllProfs(), this.getAllTAs());
 		    curRecs = new ArrayList<Recommendation>( ce.CalculateSchedule());
+
 
 			long mills = System.currentTimeMillis();
 			String insStmt = "INSERT INTO CourseData.OptimizerRecs VALUES(?, ?, ?, ?, ?)";
@@ -580,12 +511,7 @@ public class ServerApplication {
 	}
 
 	
-	/**
-	 * Forces a recalc of the current database model parameters and returns
-	 * the result
-	 * 
-	 * @return list of recommendations for analysis
-	 */
+	// I suppose we should be retrieving these from the database instead.
 	public List<Recommendation> getCurrentRecommendations(){
 		CalcAndStoreRecommendations();
 		return curRecs;

@@ -16,8 +16,12 @@ import org.apache.tomcat.jni.Time;
 
 public class AdminEntry {
 	private List<Course> semesterCourses;
+	private Integer enrollLimit;
 	public Semester s;
-
+	private List<String> professor;
+	private List<String> professorCourses;
+	private List<String> taPool;
+	private List<String> taCourses;
 	private ServerApplication sa;
 	private Connection dbConnection;
 
@@ -75,6 +79,9 @@ public class AdminEntry {
 			error = e.getMessage();
 		}
 		return error;
+	}
+	public void getSemesterCourse() {
+		
 	}
 	
 	/**
@@ -227,6 +234,33 @@ public class AdminEntry {
 		
 	}
 	
+	public String getSemester() {
+		return s.getId();
+	}
+	
+	public void setSemester( String s) {
+		
+	}
+	
+	public void getProfessorById(String id) {
+		
+	}
+	
+	public void addProfessor( String profName) {
+		System.out.println("AE: adding professor " + profName);
+	}
+	public List<Course> getProfessorCourses(String profId) {
+		return null;
+	}
+	
+	public void getTAPool() {
+		
+	}
+
+
+	public void addTA(String name) {
+		System.out.println("AE: adding TA " + name);
+	}
 	
 	/**
 	 * Updates a TA's availability for next term.
@@ -286,16 +320,6 @@ public class AdminEntry {
 		
 	}
 	
-	
-	/**
-	 * updates a professor's entry in the database with a new set of 
-	 * competences
-	 * 
-	 * @param string corresponding to the staffID of the professor for whom
-	 *        Competences will be updated
-	 * @param string corresponding to the new set of competences held by the
-	 *        professor
-	 */
 	public void updateProfCompetencies(String profID, String comp) {
 		String insStmt = "UPDATE CourseData.Professor SET `ProfCompetencies` = ? WHERE StaffID = ?";
 		try {
@@ -365,6 +389,9 @@ public class AdminEntry {
 	public void resetStudentDisp(){
 		semesterCourses = null;
 	}
+
+
+
 
 	
 }

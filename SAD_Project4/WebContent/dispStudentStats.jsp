@@ -61,14 +61,6 @@ pageEncoding="UTF-8"%>
 				<input type="submit" value="Get Data" />
 			</form>
 			</section>
-			
-			<section> 
-			<form method="POST" action="Admin">
-				<input type="hidden" name="function" value="back" />
-				<input type="submit" value="Back to Menu" />
-			</form>
-			</section>
-
 		</div>
 	</body>
 </html>
