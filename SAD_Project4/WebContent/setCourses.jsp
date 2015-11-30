@@ -36,7 +36,9 @@
 		<section> <span>Enter Course and Action</span><br>
 		<form method="POST" action="Admin">
 			<input type="hidden" name="function" value="setCourse" /> 
-			Course ID:<input name="crsname" /> <br><br> 
+			Course ID:<input name="crsid" /> <br><br>
+			Course Description:<input name="crsdesc" /> <br><br>  
+			Course Number:<input name="crsnum" /> <br><br> 
 			
             Action:<br>
             <input type="radio" name="courseSetType" value="add" checked> Add Course
