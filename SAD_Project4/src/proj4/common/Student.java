@@ -1,6 +1,5 @@
 package proj4.common;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Student {
@@ -24,7 +23,7 @@ public class Student {
     	this.creditsComplete = credits;
     	this.coursesComplete = courses;
     	this.numDesiredCourses = numDesiredCourses;
-    	this.currentRecs = Collections.emptyList();
+    	this.currentRecs = null;
     }
     
     public List<Course> getCurrentRecs() {
@@ -37,10 +36,6 @@ public class Student {
     
     public String getUID() {
     	return uID;
-    }
-    
-    public int getCreditsCompleted(){
-    	return creditsComplete;
     }
     
     public void setUID(String u) {

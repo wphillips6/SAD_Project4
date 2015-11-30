@@ -2,10 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="proj4.common.Student" %>
 <%@ page import="proj4.common.Course" %>
-<%@ page import="proj4.common.CourseCatalog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
-<%@ page import="proj4.serverapp.StudentEntry" %>
 
 <%
 	if (session == null || session.getAttribute("username") == null) {
@@ -28,7 +26,6 @@
 			<h1>
 				Hello, ${student.getName()}
 			</h1>
-			<h4> Number of Credits Completed: ${student.getCreditsCompleted()}</h4>
 		</div>
 
 		<nav>
@@ -39,11 +36,11 @@
 				if (session.getAttribute("username") != null) {
 					out.print("<li><a href=\"logout.jsp\">Logout</a></li>");
 				}
-			%>	
+			%>
 		</ul>
 		</nav>
 
-		<section> <span><h4>Current Recommendation</h4></span>
+		<section> <span><p>Current Recommendation</p></span>
 		<table>
 		<tr>
 		<th>Course ID</th><th>Course Name</th>
@@ -52,9 +49,6 @@
 		Student s = (Student)session.getAttribute("student");
 		List l = s.getDesiredCourses();
 		List lCurrRecs = s.getCurrentRecs();
-		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
-		StudentEntry se = sa.getStudentEntry();
-		lCurrRecs = se.getCurrentRecommendation(s.getUID());
 		//System.out.println("Studnt List size:  " + l.size());
 		for(int i = 0; i < lCurrRecs.size(); i++){
 			Course c = (Course)lCurrRecs.get(i);
@@ -63,26 +57,11 @@
 		%>
 		</table>
 		</section>
-		
-		<section> <span><h4>Courses Completed</h4></span>
-		<table>
-		<tr>
-		<th>Course ID</th><th>Course Name</th>
-		</tr>
-		<%
-		List lCompletedCourses = s.getCompletedCourses();
-		//System.out.println("Studnt List size:  " + l.size());
-		for(int i = 0; i < lCompletedCourses.size(); i++){
-			Course c = (Course)lCompletedCourses.get(i);
-			out.println("<tr><td>" + c.getID() + "</td><td>" + c.getDescription() + "</td></tr>");
-		}
-		%>
-		</table>
-		</section>
 
-		<section><span><h4>Set Preferences</h4></span>
+		<section><span><p>Set Preferences</p></span>
 			<form method="POST" action="Student">
 			<%
+			ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
 			List<Course> crsList = sa.getAllCourses();
 			for(int i = 0; i < 10; i++) {
 				String crsOptionsHTML = "";
@@ -90,12 +69,10 @@
 				boolean found = false;
 				for(int j = 0; j < crsList.size(); j++){
 					if(i < l.size() && l.get(i).equals(crsList.get(j))) {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+
-								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
 						found = true;
 					} else {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+
-								crsList.get(j).getDescription()+" - "+crsList.get(j).getDemand()+"</option>";
+						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
 					}
 				}
 				if(!found){

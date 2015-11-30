@@ -221,8 +221,8 @@ public class Optimizer {
 			for (int i = 0; i < nStudents; i++) {
 				int priority = 1;
 				for (int j = 0; j < nCourses; j++) {
-					double seniority = students.get(i).getCreditsComplete() + (1.0 / priority * 10);
-					obj.addTerm(seniority, studentVar[i][j]);
+					double coefficient = students.get(i).getCreditsComplete() + (1.0 / priority * 10);
+					obj.addTerm(coefficient, studentVar[i][j]);
 					priority++;
 					obj.addTerm(1.0, studentVar[i][j]);
 				}
