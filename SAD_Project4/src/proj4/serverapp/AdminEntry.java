@@ -16,12 +16,8 @@ import org.apache.tomcat.jni.Time;
 
 public class AdminEntry {
 	private List<Course> semesterCourses;
-	private Integer enrollLimit;
 	public Semester s;
-	private List<String> professor;
-	private List<String> professorCourses;
-	private List<String> taPool;
-	private List<String> taCourses;
+
 	private ServerApplication sa;
 	private Connection dbConnection;
 
@@ -234,34 +230,6 @@ public class AdminEntry {
 		
 	}
 	
-	public String getSemester() {
-		return s.getId();
-	}
-	
-	public void setSemester( String s) {
-		
-	}
-	
-	public void getProfessorById(String id) {
-		
-	}
-	
-	public void addProfessor( String profName) {
-		System.out.println("AE: adding professor " + profName);
-	}
-	public List<Course> getProfessorCourses(String profId) {
-		return null;
-	}
-	
-	public void getTAPool() {
-		
-	}
-
-
-	public void addTA(String name) {
-		System.out.println("AE: adding TA " + name);
-	}
-	
 	/**
 	 * Updates a TA's availability for next term.
 	 * 
@@ -319,7 +287,13 @@ public class AdminEntry {
 		}
 		
 	}
-	
+	/**
+	 * Updates a Professor's competencies.  This is a string of numbers passed in and is directly
+	 * stored in the database as it is passed in.
+	 * 
+	 * @param profID	The ID of the professor to modify
+	 * @param comp	The string to store in the database
+	 */
 	public void updateProfCompetencies(String profID, String comp) {
 		String insStmt = "UPDATE CourseData.Professor SET `ProfCompetencies` = ? WHERE StaffID = ?";
 		try {
@@ -353,7 +327,6 @@ public class AdminEntry {
 		else{
 			courseList = sa.getStudentEntry().getCurrentRecommendation(name);
 			s = sa.getStudent(name);
-			List l = s.getDesiredCourses();
 			courseList = s.getCurrentRecs();
 
 		}
