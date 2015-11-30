@@ -4,6 +4,7 @@ pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
 <%@ page import="proj4.serverapp.AdminEntry" %>
+<%@ page import="proj4.common.Course" %>
 
 <%@ page import="proj4.common.Administrator" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -36,11 +37,12 @@ pageEncoding="UTF-8"%>
 			ServerApplication sa = (ServerApplication)session.getAttribute("srvapp"); 
 			AdminEntry ae = sa.getAdminEntry();
 			if(ae.displayStudentData()){
-				List<String> courses = ae.infoForCurrentStudent();
-				out.println("<section> <span><p>Requested Course Data for " + courses.get(0) + " </p></span>");
+				List<Course> courses = ae.infoForCurrentStudent();
+				out.println("<section> <span><p>Requested Course Data </p></span>");
 				out.println("<table> <tr> <th>Course </th></tr>");
-				for(int i = 1; i < courses.size(); ++i){
-					out.println("<tr><td>" + courses.get(i) + "</td></tr>");
+				for(int i = 0; i < courses.size(); ++i){
+					out.println("<tr><td>" + courses.get(i).getID() + " " 
+				                + courses.get(i).getDescription() + "</td></tr>");
 				}
 				out.println("</table>	</section>");
 			}

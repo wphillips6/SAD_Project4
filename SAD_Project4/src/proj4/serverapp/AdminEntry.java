@@ -15,7 +15,7 @@ import org.apache.tomcat.jni.Time;
 
 
 public class AdminEntry {
-	private List<String> semesterCourses;
+	private List<Course> semesterCourses;
 	public Semester s;
 
 	private ServerApplication sa;
@@ -321,19 +321,21 @@ public class AdminEntry {
 	 *        student
 	 * @return List of strings containing course identifying information
 	 */
-	public List<String> getStudentInfo(String name, boolean prefsOrRecs) {
+	public List<Course> getStudentInfo(String name, boolean prefsOrRecs) {
 		Student s = sa.getStudent(name);
 		List<Course> courseList = new ArrayList<Course>();
 		List<String> stringyCourseList = new ArrayList<String>();
 		if( prefsOrRecs) courseList = s.getDesiredCourses();
-		else courseList =  sa.getStudentEntry().getCurrentRecommendation(name);
-		for (Course c: courseList){
-			stringyCourseList.add(c.getID() + " " + c.getDescription());
+		else{
+			courseList = sa.getStudentEntry().getCurrentRecommendation(name);
+			s = sa.getStudent(name);
+			List l = s.getDesiredCourses();
+			courseList = s.getCurrentRecs();
+
 		}
-		if(semesterCourses == null) semesterCourses = new ArrayList<String>();
-		semesterCourses = stringyCourseList;
-		semesterCourses.add(0, name);
-		return stringyCourseList;
+		if(courseList != null) semesterCourses = new ArrayList<Course>();
+		semesterCourses = courseList;
+		return courseList;
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class AdminEntry {
 	 *         which are either student preferred courses or system
 	 *         recommended courses
 	 */
-	public List<String> infoForCurrentStudent(){
+	public List<Course> infoForCurrentStudent(){
 		return semesterCourses;
 	}
 	

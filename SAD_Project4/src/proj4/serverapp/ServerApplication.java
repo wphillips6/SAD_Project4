@@ -566,7 +566,7 @@ public class ServerApplication {
 				for(int j = 0; j < stuList.size(); j++){
 					insPrepStmt.setFloat(1, mills);
 					insPrepStmt.setString(2, "");
-					insPrepStmt.setString(3, stuList.get(j).getUID().substring(0, 6));
+					insPrepStmt.setString(3, stuList.get(j).getUID());
 					insPrepStmt.setString(4, r.getCourse().getNumber());
 					insPrepStmt.setInt(5, 0);
 					insPrepStmt.addBatch();

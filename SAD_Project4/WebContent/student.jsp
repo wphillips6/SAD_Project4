@@ -53,8 +53,7 @@
 		List l = s.getDesiredCourses();
 		List lCurrRecs = s.getCurrentRecs();
 		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
-		StudentEntry se = sa.getStudentEntry();
-		lCurrRecs = se.getCurrentRecommendation(s.getUID());
+	
 		//System.out.println("Studnt List size:  " + l.size());
 		for(int i = 0; i < lCurrRecs.size(); i++){
 			Course c = (Course)lCurrRecs.get(i);

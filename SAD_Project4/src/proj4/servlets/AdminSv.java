@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.codec.binary.StringUtils;
+
+import proj4.common.Course;
 import proj4.serverapp.AdminEntry;
 import proj4.serverapp.ServerApplication;
 
@@ -138,11 +140,9 @@ public class AdminSv extends HttpServlet {
 	    } else if(f.compareTo("dispRecsPrefs") == 0){
 			String student = request.getParameter("stuname");
 			String dispType = request.getParameter("dispType");
-			List<String> courses = ae.getStudentInfo(student, dispType.equals("prefs") );
-			if (courses.size() != 0) response.sendRedirect("dispStudentStats.jsp");
-			else{
-				// err
-			}
+			List<Course> courses = ae.getStudentInfo(student, dispType.equals("prefs") );
+			 response.sendRedirect("dispStudentStats.jsp");
+			
 
 	    }else if(f.compareTo("back") == 0){
 	    	ae.resetStudentDisp();
