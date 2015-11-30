@@ -15,13 +15,9 @@ import org.apache.tomcat.jni.Time;
 
 
 public class AdminEntry {
-	private Integer enrollLimit;
-	private List<String> semesterCourse;
+	private List<String> semesterCourses;
 	public Semester s;
-	private List<String> professor;
-	private List<String> professorCourses;
-	private List<String> taPool;
-	private List<String> taCourses;
+
 	private ServerApplication sa;
 	private Connection dbConnection;
 
@@ -79,9 +75,6 @@ public class AdminEntry {
 			error = e.getMessage();
 		}
 		return error;
-	}
-	public void getSemesterCourse() {
-		
 	}
 	
 	/**
@@ -234,33 +227,6 @@ public class AdminEntry {
 		
 	}
 	
-	public String getSemester() {
-		return s.getId();
-	}
-	
-	public void setSemester( String s) {
-		
-	}
-	
-	public void getProfessorById(String id) {
-		
-	}
-	
-	public void addProfessor( String profName) {
-		System.out.println("AE: adding professor " + profName);
-	}
-	public List<Course> getProfessorCourses(String profId) {
-		return null;
-	}
-	
-	public void getTAPool() {
-		
-	}
-
-
-	public void addTA(String name) {
-		System.out.println("AE: adding TA " + name);
-	}
 	
 	/**
 	 * Updates a TA's availability for next term.
@@ -320,6 +286,16 @@ public class AdminEntry {
 		
 	}
 	
+	
+	/**
+	 * updates a professor's entry in the database with a new set of 
+	 * competences
+	 * 
+	 * @param string corresponding to the staffID of the professor for whom
+	 *        Competences will be updated
+	 * @param string corresponding to the new set of competences held by the
+	 *        professor
+	 */
 	public void updateProfCompetencies(String profID, String comp) {
 		String insStmt = "UPDATE CourseData.Professor SET `ProfCompetencies` = ? WHERE StaffID = ?";
 		try {
@@ -333,6 +309,18 @@ public class AdminEntry {
 		
 	}
 	
+	
+	/**
+	 * retrieves the requested data for a given student from either the database
+	 * or through a recalculation of recommendations using the most recent 
+	 * database parameters
+	 * 
+	 * @param String name or id of the student whose information is to be retrieved
+	 * @param boolean determining whether the return list is comprised of courses
+	 *        desired by the student or courses recommended by the system for the
+	 *        student
+	 * @return List of strings containing course identifying information
+	 */
 	public List<String> getStudentInfo(String name, boolean prefsOrRecs) {
 		Student s = sa.getStudent(name);
 		List<Course> courseList = new ArrayList<Course>();
@@ -342,10 +330,39 @@ public class AdminEntry {
 		for (Course c: courseList){
 			stringyCourseList.add(c.getID() + " " + c.getDescription());
 		}
+		if(semesterCourses == null) semesterCourses = new ArrayList<String>();
+		semesterCourses = stringyCourseList;
+		semesterCourses.add(0, name);
 		return stringyCourseList;
 	}
 
-
+	/**
+	 * returns whether there is any data within the internal list of strings
+	 * for display to the admin user
+	 * @return boolean value indicating whether there is data for display
+	 */
+	public boolean displayStudentData(){
+		return semesterCourses != null;
+	}
+	
+	/**
+	 * returns the data stored in semesterCourses corresponding to data
+	 * requested by the admin.
+	 * @return list of strings containing course identifying information
+	 *         which are either student preferred courses or system
+	 *         recommended courses
+	 */
+	public List<String> infoForCurrentStudent(){
+		return semesterCourses;
+	}
+	
+	/**
+	 * sets the internal list of course identifiers to null to reset
+	 * for the next request.
+	 */
+	public void resetStudentDisp(){
+		semesterCourses = null;
+	}
 
 	
 }
