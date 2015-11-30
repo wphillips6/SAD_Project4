@@ -18,6 +18,8 @@ public class CourseCatalog {
 	
 	public CourseCatalog(ServerApplication sa) {
 		//availableCourses = new ArrayList<Course>();
+		availableCourses = new ArrayList<Course>();
+
 		availableCourses = sa.getAllCourses();
 	}
 	
