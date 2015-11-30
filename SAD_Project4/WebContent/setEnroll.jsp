@@ -65,7 +65,7 @@
 			crsOptionsHTML += "<option value=\"0\" selected>----</option>";
 			for(int j = 0; j < crsList.size(); j++){
 					crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
-					courseTable += "<tr><td>"+crsList.get(j).getDescription()+"</td><td>"+crsList.get(j).getEnrollLim()+"</td></tr>";
+					courseTable += "<tr><td>"+crsList.get(j).getNumber()+"</td><td>"+crsList.get(j).getDescription()+"</td><td>"+crsList.get(j).getEnrollLim()+"</td></tr>";
 			}
 			
 			crsOptionsHTML += "</select>";

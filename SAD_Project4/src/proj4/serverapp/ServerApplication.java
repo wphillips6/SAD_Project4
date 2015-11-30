@@ -460,7 +460,8 @@ public class ServerApplication {
 			// setting requisites to -1 for now..
 			insPrepStmt.setInt(5, -1);
 			insPrepStmt.setInt(6, -1);
-			insPrepStmt.setString(7, c.getSemester().getTermDesc());
+			//insPrepStmt.setString(7, c.getSemester().getTermDesc());
+			insPrepStmt.setString(7, "");
 			insPrepStmt.executeUpdate();
 		}catch(SQLException e){
 			e.printStackTrace();

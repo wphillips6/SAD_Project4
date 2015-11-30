@@ -146,6 +146,10 @@ public class AdminEntry {
 
 	}
 	
+	public void addCourse(Course c){
+		sa.addCourse(c, false, null);
+	}
+	
 	/**
 	 * Method removeCourse removes a course from the course catalog. if there is no
 	 *                  course identifiable by the entered desc an error is
