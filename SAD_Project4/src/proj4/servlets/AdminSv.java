@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.codec.binary.StringUtils;
+
+import proj4.common.Course;
 import proj4.serverapp.AdminEntry;
 import proj4.serverapp.ServerApplication;
 
@@ -87,39 +89,8 @@ public class AdminSv extends HttpServlet {
 				
 			} //error
 
-	    } else if( f.compareTo("setCourse") == 0) {
-	    	
-	    	String course = request.getParameter("crsname");
-	    	String mode = request.getParameter("courseSetType");
-	    	String shadow = request.getParameter("modelModeType");
-	    	
-	    	String semester = request.getParameter("semester");
-			String error = null;
-			if(mode.equals("add")) error =  ae.addCourse(course, shadow.equals("shadow"), semester);
-			else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"));
-			else error = ae.editCourse(course, shadow.equals("shadow"), semester );
-			if(error == null)
-				response.sendRedirect("admin.jsp");
-			else
-			{
-				
-			
-			}
-
 	    } else if( f.compareTo("setStaffAsts")== 0){
 	    	
-//			<form method="POST" action="Admin">
-//		<input type="hidden" name="function" value="setStaffAsts" /> 
-//			Staff ID:<input name="staffname" /> <br>
-//			Available:<select name="available"><option value="0">No</option><option value="1">Yes</option></select><br>
-//			Competencies:<input name="competencies" /> <br>
-//			Model Mode:<br>
-//        <input type="radio" name="modelModeType" value="standard" checked> Standard
-//		<input type="radio" name="modelModeType" value="shadow"> Shadow Mode
-//		<br><br>
-//		<input type="submit" value="Make Change" />
-//	</form>
-	
 	    	String staffid = request.getParameter("staffname");
 	    	int available = Integer.parseInt(((String)request.getParameter("available")));
 	    	String competencies= request.getParameter("competencies");
@@ -143,6 +114,15 @@ public class AdminSv extends HttpServlet {
 			else{
 				// err
 			}
+
+	    } else if(f.compareTo("setCourse") == 0){
+	    	if( request.getParameter("courseSetType").compareTo("add") == 0){
+	    		Course c = new Course(request.getParameter("crsid"),
+	    				request.getParameter("crsnum"),
+	    				request.getParameter("crsdesc"),
+	    				null, null);
+	    		ae.addCourse(c);
+	    	}
 
 	    }
 	    

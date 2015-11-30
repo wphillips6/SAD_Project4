@@ -68,11 +68,13 @@
 				out.println("<span style=\"float: left;\">"+(i+1)+":  </span><select name=\"pref"+i+"\">");
 				boolean found = false;
 				for(int j = 0; j < crsList.size(); j++){
-					if(i < l.size() && l.get(i).equals(crsList.get(j))) {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
-						found = true;
-					} else {
-						crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
+					if(crsList.get(j).getEnrollLim() != 0 ){
+						if(i < l.size() && l.get(i).equals(crsList.get(j))) {
+							crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\" selected>"+crsList.get(j).getDescription()+"</option>";
+							found = true;
+						} else {
+							crsOptionsHTML += "<option value=\""+crsList.get(j).getNumber()+"\">"+crsList.get(j).getDescription()+"</option>";
+						}
 					}
 				}
 				if(!found){
