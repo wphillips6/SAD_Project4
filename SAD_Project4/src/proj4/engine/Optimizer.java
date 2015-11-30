@@ -201,7 +201,9 @@ public class Optimizer {
 			for (int j = 0; j < nCourses; j++) {
 				GRBLinExpr expr = new GRBLinExpr();
 				for (int i = 0; i < nProfessors; i++) {
-					expr.addTerm(1.0, professorVar[i][j]);
+					if (professors.get(i).getAvailNextTerm() == 1){
+						expr.addTerm(1.0, professorVar[i][j]);
+					}
 				}
 				model.addConstr(expr, GRB.GREATER_EQUAL, 1.0, "NeedOneTA_course_" + (j + 1));
 			}
@@ -211,7 +213,9 @@ public class Optimizer {
 			for (int j = 0; j < nCourses; j++) {
 				GRBLinExpr expr = new GRBLinExpr();
 				for (int i = 0; i < nTAs; i++) {
-					expr.addTerm(1.0, taVariables[i][j]);
+					if (teacherAssistants.get(i).getAvailNextTerm() == 1){
+						expr.addTerm(1.0, taVariables[i][j]);
+					}
 				}
 				model.addConstr(expr, GRB.GREATER_EQUAL, 1.0, "NeedOneTA_course_" + (j + 1));
 			}
