@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="proj4.common.Student" %>
 <%@ page import="proj4.common.Course" %>
-<%@ page import="proj4.common.CourseCatalog" %>
 <%@ page import="java.util.List" %>
 <%@ page import="proj4.serverapp.ServerApplication" %>
 
