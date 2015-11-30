@@ -554,8 +554,8 @@ public class ServerApplication {
 			truncate.executeUpdate("TRUNCATE CourseData.OptimizerRecs");
 			CourseCatalog cc = new CourseCatalog(this);
 			ComputationalEngine ce = new ComputationalEngine(cc, this.getAllStudents(), this.getAllProfs(), this.getAllTAs());
-		    curRecs = new ArrayList<Recommendation>();
-		    curRecs = ce.CalculateSchedule();
+		    curRecs = new ArrayList<Recommendation>( ce.CalculateSchedule());
+
 			long mills = System.currentTimeMillis();
 			String insStmt = "INSERT INTO CourseData.OptimizerRecs VALUES(?, ?, ?, ?, ?)";
 		

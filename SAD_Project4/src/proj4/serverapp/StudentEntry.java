@@ -91,7 +91,7 @@ public void setNumDesiredCourses(String studentID, int num) {
 	  List<Course> retVal = new ArrayList<Course>();
 	  for (Recommendation rec: r){
 		  for(Student s: rec.getStudents()){
-			  if(sa.getStudent(studentID).getUID() == s.getUID()) retVal.add(rec.getCourse());
+			  if(sa.getStudent(studentID).getName() == s.getName()) retVal.add(rec.getCourse());
 
 		  }
 	  }
