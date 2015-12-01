@@ -116,7 +116,7 @@ public class AdminSv extends HttpServlet {
 	    } else if(f.compareTo("setCourse") == 0){
 	    	
 	    	
-	    	String course = request.getParameter("crsname");
+	    	String course = request.getParameter("crsid");
 	    	String mode = request.getParameter("courseSetType");
 	    	String shadow = request.getParameter("modelModeType");
 	    	
