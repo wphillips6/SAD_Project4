@@ -114,17 +114,23 @@ public class AdminSv extends HttpServlet {
 		
 
 	    } else if(f.compareTo("setCourse") == 0){
+	    	
+	    	
+	    	String course = request.getParameter("crsname");
+	    	String mode = request.getParameter("courseSetType");
+	    	String shadow = request.getParameter("modelModeType");
+	    	
+	    	String semester = request.getParameter("semester");
+	    	String error = null;
 	    	if( request.getParameter("courseSetType").compareTo("add") == 0){
-	    		Course c = new Course(request.getParameter("crsid"),
-	    				request.getParameter("crsnum"),
-	    				request.getParameter("crsdesc"),
-	    				null, null);
+	    		Course c = new Course(course, request.getParameter("crsnum"),
+	    				              request.getParameter("crsdesc"), null, null);
 	    		ae.addCourse(c);
 	    	}
+	    	else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"));
+	    	else error = ae.editCourse(course, shadow.equals("shadow"), semester );
 
 	    }
-	    
-	    
 	    else {
 	    	response.sendRedirect("logout.jsp");
 	    }
