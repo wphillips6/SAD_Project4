@@ -64,7 +64,8 @@ Apply the changes and close the window.
 1. Start a web browser and go to localhost/PHPMyAdmin/
 2. From here you will login with Username/Password as root/root respectively.
 3. Next select the Databases tab and create a new database called *CourseData*
-4. Lastly you will select the Import tab and browse to the SAD_Project4/SAD_Project4/data/CourseData.sql and import that.
+4. On the left select the CourseData database that you just created.
+5. Lastly you will select the Import tab and browse to the SAD_Project4/SAD_Project4/data/CourseData.sql and import that.
 
 #### Running the Web Application
 
