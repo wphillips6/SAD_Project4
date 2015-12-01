@@ -193,7 +193,7 @@ INSERT INTO `LoginEvents` (`uID`, `TimeStamp`, `Admin`, `SuccessFail`, `E`) VALU
 CREATE TABLE IF NOT EXISTS `OptimizerRecs` (
   `TimeStamp` varchar(19) DEFAULT NULL,
   `uID_admin` varchar(5) DEFAULT NULL,
-  `uID_student` varchar(7) DEFAULT NULL,
+  `uID_student` varchar(8) DEFAULT NULL,
   `CourseID` varchar(6) DEFAULT NULL,
   `ShadowMode` int(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

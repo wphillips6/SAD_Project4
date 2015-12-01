@@ -48,9 +48,10 @@
 		</tr>
 		<%
 		Student s = (Student)session.getAttribute("student");
+		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
+		sa.CalcAndStoreRecommendations();
 		List l = s.getDesiredCourses();
 		List lCurrRecs = s.getCurrentRecs();
-		ServerApplication sa = (ServerApplication)session.getAttribute("srvapp");
 	
 		//System.out.println("Studnt List size:  " + l.size());
 
