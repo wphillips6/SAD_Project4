@@ -26,14 +26,6 @@ public class StudentEntry {
 	  this.sa = sa;
   }
 
-  public void getUsername(String studentID) {
-  }
-
-  public void setUsername(String uid) {
-  }
-
-  public void getDesiredCourses(String studentID) {
-  }
 
   /**
    * Updates a Student's preferences in the database.
@@ -72,18 +64,6 @@ public void setNumDesiredCourses(String studentID, int num) {
 		}
   }
 
-  public void getCoursePrefList(String studentID) {
-  }
-
-  public void setCoursePrefList(String studentID,  List<Course> c) {
-
-  }
-
-  public void getSemester() {
-  }
-
-  public void setSemester( Semester s) {
-  }
 
   public List<Course> getCurrentRecommendation(String studentID) {
 	  List<Recommendation> r = sa.getCurrentRecommendations();

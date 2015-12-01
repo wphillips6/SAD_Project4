@@ -129,7 +129,7 @@ public class AdminSv extends HttpServlet {
 	    	}
 	    	else if (mode.equals("remove")) error = ae.removeCourse(course, shadow.equals("shadow"));
 	    	else error = ae.editCourse(course, shadow.equals("shadow"), semester );
-
+	    	response.sendRedirect("setCourses.jsp");
 	    }
 	    else {
 	    	response.sendRedirect("logout.jsp");

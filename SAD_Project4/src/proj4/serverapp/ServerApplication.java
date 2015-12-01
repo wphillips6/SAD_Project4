@@ -446,7 +446,7 @@ public class ServerApplication {
 		
 	}
 	
-	public void addCourse(Course c, boolean shadow, Semester s){
+	public void addCourse(Course c){
 		String insStmt = "INSERT INTO CourseData.Course (`CourseNum`, `CourseID`, "
 				       + "`Description`, `CourseLimit`, `Prerequisite`, `Corequisite`, "
 				       + "`SemesterOffered`) Values ( ?, ?, ?, ?, ?, ?, ?) ";

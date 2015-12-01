@@ -76,78 +76,14 @@ public class AdminEntry {
 		}
 		return error;
 	}
-	public void getSemesterCourse() {
-		
-	}
+
 	
 	/**
-	 * Method addCourse adds a course to the course catalog. if the course
-	 *                  already exists an error message is returned
-	 * @param shadow   Is this course to be added to the shadow model
-	 *                 accessible only by administrators?
-	 * @param semester during which semesters is this class to be offered 
-	*  @return error   returns an error message if the operation is unsuccessful
+	 * Method addCourse adds a course to the course catalog. 
+	 * @param Course   the course to be added.
 	*/
-	public String addCourse( String desc, boolean shadow, String semester) {
-		String error = null;
-		String[] courses = desc.split(",");
-		for(int i = 0; i < courses.length; ++i)
-		{
-			String[] idDesc = courses[i].split(" ");
-			String cid = idDesc[0];
-			String cDesc = "";
-			if(idDesc.length > 1) cDesc = idDesc[1];
-			char[] cidChars = idDesc[0].toCharArray();
-			int cNumStrt = 0;
-			for(int j = 0; j < cidChars.length && cNumStrt == 0; ++j){
-				if (cidChars[j] == '0' ||
-					cidChars[j] == '1' ||
-					cidChars[j] == '2' || 
-					cidChars[j] == '3' ||
-					cidChars[j] == '4' || 
-					cidChars[j] == '5' ||
-					cidChars[j] == '6' ||
-					cidChars[j] == '7' ||
-					cidChars[j] == '8' ||
-					cidChars[j] == '9') cNumStrt = j; 
-		
-			}
-			if(idDesc.length > 1) cDesc = idDesc[1];
-			if((cDesc == "" || cNumStrt == 0) && error == null)
-			{
-				error = new String("Course entry " +  String.valueOf(i) + 
-						           "has invalid format.\n\n Addition of a " +
-						           " course to the catalog requires inputs\n" +
-						           " to be formatted as follows:\n\n <Department" +
-						           " abbreviation><Course number> <Course Descriptor>" +
-						           "\n\n With each entry delimited by a comma.");
-			}
-			else if(cDesc == "" || cNumStrt == 0)
-			{
-				error += " course entry " +  String.valueOf(i) + 
-						 "also has invalid format.\n";
-			}
-			else
-			{
-				Semester sem;
-				if (semester.equals("FALL"))
-					sem = new Semester(Semester.SemesterTerm.FALL);
-				else if (semester.equals("SPRING"))
-					sem = new Semester(Semester.SemesterTerm.SPRING);
-				else if (semester.equals("SUMMER"))
-					sem = new Semester(Semester.SemesterTerm.SUMMER);
-				else sem = new Semester(Semester.SemesterTerm.EVERY);
-				Course c = new Course(cid,cid.substring(cNumStrt), cDesc, "",sem );
-				sa.addCourse(c, shadow, this.s);
-			}
-		}
-		return error;
-		
-
-	}
-	
 	public void addCourse(Course c){
-		sa.addCourse(c, false, null);
+		sa.addCourse(c);
 	}
 	
 	/**
@@ -179,12 +115,10 @@ public class AdminEntry {
 			}
 			else
 			{
-
 				sa.removeCourse(c, shadow);
 			}
 		}
 		return error;
-		
 	}
 	
 	/**
