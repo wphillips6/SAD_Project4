@@ -252,6 +252,7 @@ public class AdminEntry {
 		List<String> stringyCourseList = new ArrayList<String>();
 		if( prefsOrRecs) courseList = s.getDesiredCourses();
 		else{
+			sa.CalcAndStoreRecommendations();
 			courseList = sa.getStudentEntry().getCurrentRecommendation(name);
 			s = sa.getStudent(name);
 			courseList = s.getCurrentRecs();

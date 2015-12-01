@@ -17,7 +17,7 @@ public class Course implements Comparable {
 		this.setDescription(d);
 		this.setPrerequisite(p);
 		this.setSemester(s);
-		this.enrollment = 0;
+		this.enrollment = 200;
 	}
 
 	public int getEnrollLim() {
