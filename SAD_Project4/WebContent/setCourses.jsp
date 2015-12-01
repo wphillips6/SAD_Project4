@@ -43,7 +43,6 @@
             Action:<br>
             <input type="radio" name="courseSetType" value="add" checked> Add Course
             <input type="radio" name="courseSetType" value="edit"> Edit Course Semester
-			<input type="radio" name="courseSetType" value="remove"> Remove Course
 			<br><br>
 			
 			Semesters offered:<br>
@@ -68,7 +67,11 @@
 			List<Course> crsList = sa.getAllCourses();
 			String crsTable = "<table><tr><th>Course Name</th><th>Offered</th></tr>";
 			for(int i = 0; i < crsList.size(); i++){
-				crsTable += "<tr><td>"+((Course)crsList.get(i)).getDescription()+"</td><td><input type=\"checkbox\"/></td></tr>";
+				crsTable += "<tr><td>";
+				crsTable += ((Course)crsList.get(i)).getID();
+				crsTable += " ";
+				crsTable += ((Course)crsList.get(i)).getDescription();
+				crsTable += "</td><td><input type=\"checkbox\"/></td></tr>";
 			}
 			crsTable += "</table>";
 			out.println(crsTable);

@@ -469,11 +469,13 @@ public class ServerApplication {
 	}
 	
 	public void removeCourse(Course c, boolean shadow ){
-		String delStmt = "DELETE FROM CourseData.Course WHERE `CourseNum` = ? AND " +
+		String delStmt = "DELETE FROM CourseData.Course WHERE " +
 						 "`CourseID` = ? AND `Description` = ? ";
 		try{
 			PreparedStatement insPrepStmt = dbConnection.prepareStatement(delStmt);
-			insPrepStmt.executeUpdate();
+			insPrepStmt.setString(1, c.getID());
+			insPrepStmt.setString(2, c.getDescription());
+			insPrepStmt.execute();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}

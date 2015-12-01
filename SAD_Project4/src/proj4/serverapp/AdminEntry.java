@@ -97,27 +97,16 @@ public class AdminEntry {
 	*/
 	public String removeCourse( String desc, boolean shadow) {
 		String error = null;
-		String[] courses = desc.split(",");
-		for(int i = 0; i < courses.length; ++i)
+		Course c = sa.getCourse(desc);//, shadow);
+		if(c == null)
 		{
-			String[] idDesc = courses[i].split(" ");
-			String cid = idDesc[0];
-			Course c = sa.getCourse(cid);//, shadow);
-			if(c == null && error == null)
-			{
-				error = new String("Course entry " +  String.valueOf(i) + 
-						           "is invalid.\n");
-			}
-			else if(c == null)
-			{
-				error += " course entry " +  String.valueOf(i) + 
-						 "is also invalid.\n";
-			}
-			else
-			{
-				sa.removeCourse(c, shadow);
-			}
+			error = new String("Course entry is invalid.\n");
 		}
+		else
+		{
+			sa.removeCourse(c, shadow);
+		}
+
 		return error;
 	}
 	
